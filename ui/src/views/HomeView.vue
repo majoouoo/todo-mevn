@@ -1,5 +1,5 @@
 <script setup>
-import TaskBody from "../components/TaskBody.vue"
+import TaskBody from '../components/TaskBody.vue'
 </script>
 
 <template>

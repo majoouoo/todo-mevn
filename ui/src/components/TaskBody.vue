@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue"
+import { ref } from 'vue'
 
 defineProps({
   taskName: String
@@ -10,11 +10,12 @@ let checked = ref(false)
 
 <template>
   <div>
-    <button @click="checked = !checked" :class="{ checked: checked }" id="checkBtn"></button>
-    <span>{{ taskName }}</span>
-    
+    <button @click="checked = !checked" id="checkBtn">
+      <span class="material-symbols-outlined" v-if="checked"> task_alt </span>
+      <span class="material-symbols-outlined" v-else> radio_button_unchecked </span>
+    </button>
+    <span id="taskName" :class="{ checked: checked }">{{ taskName }}</span>
   </div>
-  
 </template>
 
 <style scoped>
@@ -25,24 +26,31 @@ div {
   margin: 20px;
   padding: 10px;
   border-radius: 15px;
+  display: flex;
+  align-items: center;
 }
 
-span {
+#taskName {
   font-weight: 500;
   font-size: 20px;
+}
 
+#taskName.checked {
+  text-decoration: line-through;
+  color: #7c7c7c;
 }
 
 #checkBtn {
-  height: 20px;
-  width: 20px;
-  border-radius: 20px;
-  outline: none;
   background-color: transparent;
-  border: 2px solid #949494;
+  border: none;
 }
 
-#checkBtn.checked {
-  background-color: red;
+.material-symbols-outlined {
+  font-size: 24px;
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 500,
+  'GRAD' 0,
+  'opsz' 24
 }
 </style>

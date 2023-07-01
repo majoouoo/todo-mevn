@@ -1,6 +1,5 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-
 </script>
 
 <template>
@@ -8,13 +7,22 @@ import { RouterLink, RouterView } from 'vue-router'
     <h1>To-Do List</h1>
     <nav>
       <div>
-        <RouterLink to="/"><span class="material-symbols-outlined"> home </span><p>Home</p></RouterLink>
+        <RouterLink to="/"
+          ><span class="material-symbols-outlined"> home </span>
+          <p>Home</p></RouterLink
+        >
       </div>
       <div>
-        <RouterLink to="/add-task"><span class="material-symbols-outlined"> add_circle </span><p>Add Task</p></RouterLink>
+        <RouterLink to="/add-task"
+          ><span class="material-symbols-outlined"> add_circle </span>
+          <p>Add Task</p></RouterLink
+        >
       </div>
       <div>
-        <RouterLink to="/calendar"><span class="material-symbols-outlined"> calendar_month </span><p>Calendar</p></RouterLink>
+        <RouterLink to="/calendar"
+          ><span class="material-symbols-outlined"> calendar_month </span>
+          <p>Calendar</p></RouterLink
+        >
       </div>
     </nav>
   </header>
@@ -71,19 +79,11 @@ nav div a p {
 }
 
 .material-symbols-outlined {
-  font-variation-settings:
-  'FILL' 0,
-  'wght' 300,
-  'GRAD' 0,
-  'opsz' 27
+  font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 27;
 }
 
 .router-link-active .material-symbols-outlined {
-  font-variation-settings:
-  'FILL' 1,
-  'wght' 300,
-  'GRAD' 0,
-  'opsz' 27
+  font-variation-settings: 'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 27;
 }
 
 .router-link-active * {
