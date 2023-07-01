@@ -2,42 +2,51 @@
 import { ref } from 'vue'
 
 defineProps({
-  taskName: String
+  taskName: String,
+  dateDue: String
 })
 
 let checked = ref(false)
 </script>
 
 <template>
-  <div>
+  <div id="outerDiv">
     <button @click="checked = !checked" id="checkBtn">
       <span class="material-symbols-outlined" v-if="checked"> task_alt </span>
       <span class="material-symbols-outlined" v-else> radio_button_unchecked </span>
     </button>
-    <span id="taskName" :class="{ checked: checked }">{{ taskName }}</span>
+    <div id="textDiv">
+      <span id="taskName" :class="{ checked }">{{ taskName }}</span>
+      <span id="dateDue" :class="{ checked }">{{ dateDue }}</span>
+    </div>
   </div>
 </template>
 
 <style scoped>
-div {
-  background-color: #dbdbdb;
-  border: 3px solid #dfdfdf;
-  box-shadow: 0 3px 5px 0 #cfcfcf;
+#outerDiv {
+  background-color: transparent;
+  border: 1px solid #171827;
   margin: 20px;
   padding: 10px;
-  border-radius: 15px;
+  border-radius: 5px;
   display: flex;
   align-items: center;
 }
 
-#taskName {
+#textDiv {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+span {
   font-weight: 500;
   font-size: 20px;
 }
 
-#taskName.checked {
+span.checked {
   text-decoration: line-through;
-  color: #7c7c7c;
+  color: #4f5069;
 }
 
 #checkBtn {
@@ -47,10 +56,6 @@ div {
 
 .material-symbols-outlined {
   font-size: 24px;
-  font-variation-settings:
-  'FILL' 0,
-  'wght' 500,
-  'GRAD' 0,
-  'opsz' 24
+  font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
 }
 </style>

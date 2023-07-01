@@ -37,8 +37,8 @@ header {
   height: 6vh;
   padding: 0 0 0 20px;
   align-items: center;
-  background-color: #202020;
-  box-shadow: 0 0 30px #5e5e5e;
+  background-color: #11121d;
+  border-bottom: 1px solid #171827;
 }
 
 header * {
@@ -70,12 +70,12 @@ nav div a * {
 }
 
 nav div a p {
-  color: #7c7c7c;
+  color: #4f5069;
 }
 
 .material-symbols-outlined {
   font-size: 1.5em;
-  color: #7c7c7c;
+  color: #4f5069;
 }
 
 .material-symbols-outlined {
