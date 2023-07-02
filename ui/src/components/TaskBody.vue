@@ -7,7 +7,7 @@ defineProps({
 <template>
   <div id="outerDiv">
     <button @click="$emit('completeTask')" id="checkBtn">
-      <span class="material-symbols-outlined" v-if="complete"> task_alt </span>
+      <span class="material-symbols-outlined" v-if="task.complete"> task_alt </span>
       <span class="material-symbols-outlined" v-else> radio_button_unchecked </span>
     </button>
     <div id="textDiv">

@@ -36,19 +36,25 @@ app.get("/tasklist", (req, res) => {
     .forEach(task => {
       tasklist.push(task)
     })
-    .then(() => {
-      res.status(200).json(tasklist)
-    })
-    .catch((err) => {
-      res.status(500).json({err: "Could not fetch all tasks", errCode: err})
-    })
-})
-
-app.post("/addtask", (req, res) => {
-  
+    .then(() => res.status(200).json(tasklist))
+    .catch((err) => res.status(500).json({err: "Could not fetch all tasks", errCode: err}))
 })
 
 app.patch("/completetask", (req, res) => {
-  console.log(req.query)
-  res.status(200)
+  const taskId = req.query.id
+  if(ObjectId.isValid(taskId)) {
+    let isComplete
+    tasks.findOne({_id: new ObjectId(taskId)})
+      .then(task => isComplete = task.complete)
+      .then(() => {
+        tasks.updateOne(
+          { _id: new ObjectId(taskId) },
+          { $set: { complete: !isComplete } }
+        )
+        .then(() => res.status(200).json({msg: "Task modified"}))
+        .catch((err) => res.status(500).json({err: "Could not modify task", errCode: err}))
+      })
+  } else {
+    res.status(500).json({err: "Invalid object ID"})
+  }
 })
