@@ -1,23 +1,18 @@
 <script setup>
-import { ref } from 'vue'
-
 defineProps({
-  taskName: String,
-  dateDue: String
+  task: Object
 })
-
-let checked = ref(false)
 </script>
 
 <template>
   <div id="outerDiv">
-    <button @click="checked = !checked" id="checkBtn">
-      <span class="material-symbols-outlined" v-if="checked"> task_alt </span>
+    <button @click="$emit('completeTask')" id="checkBtn">
+      <span class="material-symbols-outlined" v-if="complete"> task_alt </span>
       <span class="material-symbols-outlined" v-else> radio_button_unchecked </span>
     </button>
     <div id="textDiv">
-      <span id="taskName" :class="{ checked }">{{ taskName }}</span>
-      <span id="dateDue" :class="{ checked }">{{ dateDue }}</span>
+      <span id="taskName" :class="{ complete: task.complete }">{{ task.name }}</span>
+      <span id="dateDue" :class="{ complete: task.complete }">{{ task.dateDue }}</span>
     </div>
   </div>
 </template>
@@ -44,7 +39,7 @@ span {
   font-size: 20px;
 }
 
-span.checked {
+span.complete {
   text-decoration: line-through;
   color: #4f5069;
 }

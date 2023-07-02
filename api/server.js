@@ -47,3 +47,8 @@ app.get("/tasklist", (req, res) => {
 app.post("/addtask", (req, res) => {
   
 })
+
+app.patch("/completetask", (req, res) => {
+  console.log(req.query)
+  res.status(200)
+})
