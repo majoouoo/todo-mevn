@@ -69,3 +69,14 @@ app.post("/api/addtask", (req, res) => {
     .then(() => res.status(200).json({msg: "New task added"}))
     .catch((err) => res.status(500).json({err: "Failed to add task", errCode: err}))
 })
+
+app.delete("/api/deletetask", (req, res) => {
+  const taskId = req.query.id
+  if(ObjectId.isValid(taskId)) {
+    tasks.deleteOne({ _id: new ObjectId(taskId) })
+      .then(() => res.status(200).json({msg: "Task deleted"}))
+      .catch((err) => res.status(500).json({err: "Could not delete task", errCode: err}))
+  } else {
+    res.status(500).json({err: "Invalid object ID"})
+  }
+})

@@ -17,9 +17,16 @@ onMounted(() => {
       <span class="material-symbols-outlined" v-if="task.complete"> task_alt </span>
       <span class="material-symbols-outlined" v-else> radio_button_unchecked </span>
     </button>
-    <div id="textDiv">
-      <span id="taskName" :class="{ complete: task.complete }">{{ task.name }}</span>
-      <span id="dateDue" :class="{ complete: task.complete, overdue }">{{ task.dateDue }}</span>
+    <div id="innerDiv">
+      <div id="textDiv">
+        <p id="taskName" :class="{ complete: task.complete }">{{ task.name }}</p>
+        <p id="dateDue" :class="{ complete: task.complete, overdue }">{{ task.dateDue }}</p>
+      </div>
+      <div id="buttonDiv">
+        <button @click="$emit('deleteTask')" id="deleteBtn">
+          <span class="material-symbols-outlined"> delete </span>
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -35,32 +42,41 @@ onMounted(() => {
   align-items: center;
 }
 
-#textDiv {
+#innerDiv {
   display: flex;
   justify-content: space-between;
   width: 100%;
 }
 
-span {
-  font-weight: 500;
+p {
+  font-weight: 600;
   font-size: 20px;
+  line-height: 24px;
+  overflow-wrap: anywhere;
 }
 
-span#dateDue {
+p#dateDue {
   font-weight: 300;
-  font-size: 18px;
+  font-size: 16px;
 }
 
-span.overdue {
+p.overdue {
   color: rgb(253, 119, 119);
 }
 
-span.complete {
-  text-decoration: line-through;
+p.complete {
   color: #4f5069;
 }
 
-#checkBtn {
+p.complete#taskName {
+  text-decoration: line-through;
+}
+
+#textDiv * {
+  margin: 0 10px;
+}
+
+button {
   background-color: transparent;
   border: none;
   display: flex;
@@ -70,5 +86,6 @@ span.complete {
 .material-symbols-outlined {
   font-size: 24px;
   font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+  cursor: pointer;
 }
 </style>

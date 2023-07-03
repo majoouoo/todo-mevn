@@ -5,10 +5,6 @@ let dateDue = ref()
 
 const submitForm = () => {
   if (document.querySelector('form').reportValidity()) {
-    name.value = ""
-    dateDue.value = ""
-    document.getElementById("dateDue").type = "text"
-
     fetch('http://localhost:8080/api/addtask', {
       method: 'POST',
       headers: {
@@ -19,6 +15,10 @@ const submitForm = () => {
         dateDue: dateDue.value
       })
     })
+
+    name.value = ''
+    dateDue.value = ''
+    document.getElementById('dateDue').type = 'text'
   }
 }
 </script>

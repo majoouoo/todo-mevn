@@ -22,6 +22,18 @@ const completeTask = (task) => {
     method: 'PATCH'
   })
 }
+
+const deleteTask = (task) => {
+  const taskId = task._id
+
+  fetch(`http://localhost:8080/api/deletetask?id=${taskId}`, {
+    method: 'DELETE'
+  })
+    .then(() => {
+      const index = tasklist.value.findIndex(task => task._id == taskId)
+      tasklist.value.splice(index, 1)
+    })
+}
 </script>
 
 <template>
@@ -31,6 +43,7 @@ const completeTask = (task) => {
       :key="task._id"
       :task="task"
       @completeTask="completeTask(task)"
+      @deleteTask="deleteTask(task)"
     ></TaskBody>
   </div>
 </template>
