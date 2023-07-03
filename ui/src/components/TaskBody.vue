@@ -1,6 +1,13 @@
 <script setup>
-defineProps({
+import { onMounted, ref } from 'vue'
+
+const props = defineProps({
   task: Object
+})
+
+let overdue = ref()
+onMounted(() => {
+  overdue.value = Date.parse(props.task.dateDue) < new Date() ? true : false
 })
 </script>
 
@@ -12,7 +19,7 @@ defineProps({
     </button>
     <div id="textDiv">
       <span id="taskName" :class="{ complete: task.complete }">{{ task.name }}</span>
-      <span id="dateDue" :class="{ complete: task.complete }">{{ task.dateDue }}</span>
+      <span id="dateDue" :class="{ complete: task.complete, overdue }">{{ task.dateDue }}</span>
     </div>
   </div>
 </template>
@@ -39,6 +46,15 @@ span {
   font-size: 20px;
 }
 
+span#dateDue {
+  font-weight: 300;
+  font-size: 18px;
+}
+
+span.overdue {
+  color: rgb(253, 119, 119);
+}
+
 span.complete {
   text-decoration: line-through;
   color: #4f5069;
@@ -47,6 +63,8 @@ span.complete {
 #checkBtn {
   background-color: transparent;
   border: none;
+  display: flex;
+  align-items: center;
 }
 
 .material-symbols-outlined {

@@ -39,6 +39,8 @@ header {
   align-items: center;
   background-color: #11121d;
   border-bottom: 1px solid #171827;
+  position: sticky;
+  top: 0;
 }
 
 header * {

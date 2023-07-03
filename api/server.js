@@ -29,7 +29,7 @@ async function connectToDb() {
 connectToDb()
 const tasks = database.collection("tasks")
 
-app.get("/tasklist", (req, res) => {
+app.get("/api/tasklist", (req, res) => {
   let tasklist = []
   tasks.find()
     .sort({ dateDue: 1 })
@@ -40,7 +40,7 @@ app.get("/tasklist", (req, res) => {
     .catch((err) => res.status(500).json({err: "Could not fetch all tasks", errCode: err}))
 })
 
-app.patch("/completetask", (req, res) => {
+app.patch("/api/completetask", (req, res) => {
   const taskId = req.query.id
   if(ObjectId.isValid(taskId)) {
     let isComplete
@@ -57,4 +57,15 @@ app.patch("/completetask", (req, res) => {
   } else {
     res.status(500).json({err: "Invalid object ID"})
   }
+})
+
+app.post("/api/addtask", (req, res) => {
+  const body = req.body
+  tasks.insertOne({
+    name: body.name,
+    dateDue: new Date(body.dateDue),
+    complete: false
+  })
+    .then(() => res.status(200).json({msg: "New task added"}))
+    .catch((err) => res.status(500).json({err: "Failed to add task", errCode: err}))
 })
