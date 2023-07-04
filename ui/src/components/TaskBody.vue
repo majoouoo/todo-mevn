@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 
 const props = defineProps({
   task: Object
@@ -9,6 +9,11 @@ let overdue = ref()
 onMounted(() => {
   overdue.value = Date.parse(props.task.dateDue) < new Date() ? true : false
 })
+
+const priorityClass = computed(() => ({
+  firstPriority: (props.task.priority == 1) && (!props.task.complete),
+  secondPriority: (props.task.priority == 2) && (!props.task.complete)
+}))
 </script>
 
 <template>
@@ -20,7 +25,13 @@ onMounted(() => {
     <div id="innerDiv">
       <div id="textDiv">
         <p id="taskName" :class="{ complete: task.complete }">{{ task.name }}</p>
-        <p id="dateDue" :class="{ complete: task.complete, overdue }">{{ task.dateDue }}</p>
+        <p id="dateDue" :class="{ complete: task.complete, overdue }">
+          {{ task.dateDue }}
+          <span id="priority" :class="[{ complete: task.complete }, priorityClass]">
+            <span class="material-symbols-outlined"> flag </span>
+            {{ task.priority }}
+          </span>
+        </p>
       </div>
       <div id="buttonDiv">
         <button @click="$emit('deleteTask')" id="deleteBtn">
@@ -60,15 +71,15 @@ p#dateDue {
   font-size: 16px;
 }
 
-p.overdue {
-  color: rgb(253, 119, 119);
+.overdue {
+  color: #fd7777;
 }
 
-p.complete {
+.complete {
   color: #4f5069;
 }
 
-p.complete#taskName {
+.complete#taskName {
   text-decoration: line-through;
 }
 
@@ -87,5 +98,30 @@ button {
   font-size: 24px;
   font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
   cursor: pointer;
+}
+
+#priority .material-symbols-outlined {
+  font-size: 16px;
+  font-variation-settings: 'FILL' , 'wght' 500, 'GRAD' 0, 'opsz' 16;
+  cursor: default;
+  color: #e4e4e4;
+  height: 20px;
+  margin: 0;
+  position: relative;
+  top: 2px;
+}
+
+#priority.complete .material-symbols-outlined {
+  color: #4f5069; 
+}
+
+#priority.firstPriority,
+#priority.firstPriority * {
+  color: #fd7777;
+}
+
+#priority.secondPriority,
+#priority.secondPriority * {
+  color: #fdb877;
 }
 </style>

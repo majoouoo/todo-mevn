@@ -28,11 +28,10 @@ const deleteTask = (task) => {
 
   fetch(`http://localhost:8080/api/deletetask?id=${taskId}`, {
     method: 'DELETE'
+  }).then(() => {
+    const index = tasklist.value.findIndex((task) => task._id == taskId)
+    tasklist.value.splice(index, 1)
   })
-    .then(() => {
-      const index = tasklist.value.findIndex(task => task._id == taskId)
-      tasklist.value.splice(index, 1)
-    })
 }
 </script>
 

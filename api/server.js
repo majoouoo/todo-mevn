@@ -32,7 +32,7 @@ const tasks = database.collection("tasks")
 app.get("/api/tasklist", (req, res) => {
   let tasklist = []
   tasks.find()
-    .sort({ dateDue: 1 })
+    .sort({ dateDue: 1, priority: 1 })
     .forEach(task => {
       tasklist.push(task)
     })
@@ -64,6 +64,7 @@ app.post("/api/addtask", (req, res) => {
   tasks.insertOne({
     name: body.name,
     dateDue: new Date(body.dateDue),
+    priority: body.priority,
     complete: false
   })
     .then(() => res.status(200).json({msg: "New task added"}))
