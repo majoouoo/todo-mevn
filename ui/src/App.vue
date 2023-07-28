@@ -24,6 +24,12 @@ import { RouterLink, RouterView } from 'vue-router'
           <p>Calendar</p></RouterLink
         >
       </div>
+      <div>
+        <RouterLink to="/login"
+          ><span class="material-symbols-outlined"> account_circle </span>
+          <p>Login</p></RouterLink
+        >
+      </div>
     </nav>
   </header>
 

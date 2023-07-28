@@ -1,5 +1,6 @@
 const express = require("express")
 const cors = require("cors")
+const bcrypt = require("bcrypt")
 const app = express()
 const { MongoClient, ObjectId } = require("mongodb")
 
@@ -28,6 +29,7 @@ async function connectToDb() {
 
 connectToDb()
 const tasks = database.collection("tasks")
+const users = database.collection("users")
 
 app.use(express.static("../ui/dist"))
 app.use(express.static("../ui/dist/assets"))
@@ -86,4 +88,17 @@ app.delete("/api/deletetask", (req, res) => {
   } else {
     res.status(500).json({err: "Invalid object ID"})
   }
+})
+
+app.post("/api/signup", (req, res) => {
+  bcrypt.hash(req.body.password, 10)
+    .then((hash) => {
+      users.insertOne({
+        username: req.body.username,
+        password: hash
+      })
+        .then(res.status(200).json({ msg: "User added" }))
+        .catch((err) => res.status(500).json({ err: "Failed to write to DB", errCode: err }))
+    })
+    .catch((err) => res.status(500).json({ err: "Failed to hash password", errCode: err }))
 })
