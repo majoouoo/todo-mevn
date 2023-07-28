@@ -1,6 +1,7 @@
 const express = require("express")
 const cors = require("cors")
 const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken")
 const app = express()
 const { MongoClient, ObjectId } = require("mongodb")
 
@@ -63,7 +64,7 @@ app.patch("/api/completetask", (req, res) => {
         .catch((err) => res.status(500).json({err: "Could not modify task", errCode: err}))
       })
   } else {
-    res.status(500).json({err: "Invalid object ID"})
+    res.status(404).json({err: "Invalid object ID"})
   }
 })
 
@@ -75,7 +76,7 @@ app.post("/api/addtask", (req, res) => {
     priority: body.priority,
     complete: false
   })
-    .then(() => res.status(200).json({msg: "New task added"}))
+    .then(() => res.status(201).json({msg: "New task added"}))
     .catch((err) => res.status(500).json({err: "Failed to add task", errCode: err}))
 })
 
@@ -86,7 +87,7 @@ app.delete("/api/deletetask", (req, res) => {
       .then(() => res.status(200).json({msg: "Task deleted"}))
       .catch((err) => res.status(500).json({err: "Could not delete task", errCode: err}))
   } else {
-    res.status(500).json({err: "Invalid object ID"})
+    res.status(404).json({err: "Invalid object ID"})
   }
 })
 
@@ -100,12 +101,22 @@ app.post("/api/signup", (req, res) => {
               username: req.body.username,
               password: hash
             })
-              .then(res.status(200).json({ msg: "User added" }))
+              .then(res.status(201).json({ msg: "User added" }))
               .catch((err) => res.status(500).json({ err: "Failed to write to DB", errCode: err }))
           })
           .catch((err) => res.status(500).json({ err: "Failed to hash password", errCode: err }))
       } else {
-        res.status(500).json({ err: "User already exists" })
+        res.status(409).json({ err: "Username is unavailable" })
+      }
+    })
+})
+
+app.post("/api/login", (req, res) => {
+  users.findOne({ username: req.body.username })
+    .then((result) => {
+      if(result) {
+        bcrypt.compare(req.body.password, result.password)
+          .then(() => {})
       }
     })
 })

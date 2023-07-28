@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import router from '../router';
 let username = ref()
 let password = ref()
+let error = ref("")
 
 const login = () => {
   if (document.querySelector('form').reportValidity()) {
@@ -32,7 +33,14 @@ const signUp = () => {
         password: password.value
       })
     })
-      .then(() => router.push("/"))
+      .then(response => {
+        if(response.status === 201) {
+          router.push("/")
+        } else {
+          response.json()
+            .then(data => error.value = data.err)
+        }
+      })
   }
 }
 </script>
@@ -51,6 +59,7 @@ const signUp = () => {
         <input type="submit" value="Login" @click.prevent="login" />
         <input type="submit" value="Sign Up" @click.prevent="signUp" />
       </div>
+      <p id="error">{{ error }}</p>
     </form>
   </div>
 </template>
@@ -100,5 +109,9 @@ input[type='submit'] {
 ::placeholder {
   color: #4f5069;
   opacity: 1;
+}
+
+#error {
+  color: #fd7777;
 }
 </style>
