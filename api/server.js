@@ -91,14 +91,21 @@ app.delete("/api/deletetask", (req, res) => {
 })
 
 app.post("/api/signup", (req, res) => {
-  bcrypt.hash(req.body.password, 10)
-    .then((hash) => {
-      users.insertOne({
-        username: req.body.username,
-        password: hash
-      })
-        .then(res.status(200).json({ msg: "User added" }))
-        .catch((err) => res.status(500).json({ err: "Failed to write to DB", errCode: err }))
+  users.findOne({ username: req.body.username })
+    .then((result) => {
+      if (!result) {
+        bcrypt.hash(req.body.password, 10)
+          .then((hash) => {
+            users.insertOne({
+              username: req.body.username,
+              password: hash
+            })
+              .then(res.status(200).json({ msg: "User added" }))
+              .catch((err) => res.status(500).json({ err: "Failed to write to DB", errCode: err }))
+          })
+          .catch((err) => res.status(500).json({ err: "Failed to hash password", errCode: err }))
+      } else {
+        res.status(500).json({ err: "User already exists" })
+      }
     })
-    .catch((err) => res.status(500).json({ err: "Failed to hash password", errCode: err }))
 })
