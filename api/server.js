@@ -29,6 +29,12 @@ async function connectToDb() {
 connectToDb()
 const tasks = database.collection("tasks")
 
+app.use(express.static("../ui/dist"))
+app.use(express.static("../ui/dist/assets"))
+app.get("/", (req, res) =>{
+  res.status(200).sendFile("../ui/dist/index.html")
+})
+
 app.get("/api/tasklist", (req, res) => {
   let tasklist = []
   tasks.find()
