@@ -29,6 +29,7 @@ const login = () => {
                 accessToken: data.accessToken
               }))
               store.isLoggedIn = true
+              error.value = ""
             })
         } else {
           response.json()
@@ -59,6 +60,7 @@ const signup = () => {
                 accessToken: data.accessToken
               }))
               store.isLoggedIn = true
+              error.value = ""
             })
         } else {
           response.json()
@@ -71,6 +73,16 @@ const signup = () => {
 const logout = () => {
   localStorage.removeItem("user")
   store.isLoggedIn = false
+}
+
+const deleteAccount = () => {
+  fetch('http://localhost:8080/api/deleteaccount', {
+    method: 'DELETE',
+    headers: {
+      'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem("user")).accessToken
+    }
+  })
+    .then(logout())
 }
 </script>
 
@@ -94,6 +106,7 @@ const logout = () => {
       <h1>Logged in as {{ username }}</h1>
       <br>
       <button @click="logout">Log out</button>
+      <button @click="deleteAccount">Delete account</button>
     </div>
   </div>
 </template>

@@ -162,3 +162,11 @@ app.post("/api/login", (req, res) => {
       }
     })
 })
+
+app.delete("/api/deleteaccount", authenticate, (req, res) => {
+  users.deleteOne({ username: req.user.username })
+    .then(() => {
+      tasks.deleteMany({ user: req.user.username })
+        .then(() => res.status(200).json({ msg: "User and tasks deleted" }))
+    })
+})
