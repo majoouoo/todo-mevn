@@ -1,5 +1,8 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+import { ref } from "vue"
+
+let isLoggedIn = ref(localStorage.getItem("user") ? true : false)
 </script>
 
 <template>
@@ -18,16 +21,18 @@ import { RouterLink, RouterView } from 'vue-router'
           <p>Add Task</p></RouterLink
         >
       </div>
-      <div>
+      <!-- <div>
         <RouterLink to="/calendar"
           ><span class="material-symbols-outlined"> calendar_month </span>
           <p>Calendar</p></RouterLink
         >
-      </div>
+      </div> -->
       <div>
         <RouterLink to="/login"
           ><span class="material-symbols-outlined"> account_circle </span>
-          <p>Login</p></RouterLink
+          <p v-if="!isLoggedIn">Login</p>
+          <p v-else>Account</p>
+          </RouterLink
         >
       </div>
     </nav>

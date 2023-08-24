@@ -4,8 +4,15 @@ import TaskBody from '../components/TaskBody.vue'
 
 let tasklist = ref([])
 let tasklistCompleted = ref([])
+let isLoggedIn = ref(localStorage.getItem("user") ? true : false)
+
 const fetchTasklist = () => {
-  fetch('http://localhost:8080/api/tasklist')
+  if(isLoggedIn.value) {
+    fetch('http://localhost:8080/api/tasklist', {
+    headers: {
+      "Authorization": "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken
+    }
+  })
     .then((response) => response.json())
     .then((body) => {
       for(let i = 0; i < body.length; i++) {
@@ -15,6 +22,7 @@ const fetchTasklist = () => {
         task.complete ? tasklistCompleted.value.push(task) : tasklist.value.push(task)
       }
     })
+  }
 }
 
 onMounted(() => fetchTasklist())
@@ -32,7 +40,10 @@ const removeTaskFromList = (task) => {
 
 const completeTask = (task) => {
   fetch(`http://localhost:8080/api/completetask?id=${task._id}`, {
-    method: 'PATCH'
+    method: 'PATCH',
+    headers: {
+      "Authorization": "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken
+    }
   })
     .then(() => {
       removeTaskFromList(task)
@@ -45,7 +56,10 @@ const completeTask = (task) => {
 
 const deleteTask = (task) => {
   fetch(`http://localhost:8080/api/deletetask?id=${task._id}`, {
-    method: 'DELETE'
+    method: 'DELETE',
+    headers: {
+      "Authorization": "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken
+    }
   }).then(() => {
     removeTaskFromList(task)
   })
@@ -53,7 +67,7 @@ const deleteTask = (task) => {
 </script>
 
 <template>
-  <div id="tasklist">
+  <div id="tasklist" v-if="isLoggedIn">
     <TaskBody
       v-for="task of tasklist"
       :key="task._id"
@@ -62,7 +76,7 @@ const deleteTask = (task) => {
       @deleteTask="deleteTask(task)"
     ></TaskBody>
   </div>
-  <div id="tasklistCompleted">
+  <div id="tasklistCompleted" v-if="isLoggedIn">
     <h3 id="tasklistCompletedTitle" v-if="tasklistCompleted.length > 0">Completed Tasks</h3>
     <TaskBody
       v-for="task of tasklistCompleted"
@@ -72,6 +86,8 @@ const deleteTask = (task) => {
       @deleteTask="deleteTask(task)"
     ></TaskBody>
   </div>
+  <h1 v-if="isLoggedIn && tasklist.length + tasklistCompleted.length == 0">No tasks</h1>
+  <h1 v-if="!isLoggedIn">Logged out</h1>
 
 </template>
 
@@ -82,6 +98,11 @@ const deleteTask = (task) => {
 
 #tasklistCompletedTitle {
   color: #595a75;
+  margin: 20px;
+}
+
+h1 {
+  text-align: center;
   margin: 20px;
 }
 </style>

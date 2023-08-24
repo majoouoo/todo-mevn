@@ -1,7 +1,9 @@
 <script setup>
 import { ref } from 'vue'
-import router from '../router';
-let username = ref()
+
+let isLoggedIn = ref(localStorage.getItem("user") ? true : false)
+
+let username = ref(isLoggedIn.value ? JSON.parse(localStorage.getItem("user")).username : "")
 let password = ref()
 let error = ref("")
 
@@ -17,11 +19,25 @@ const login = () => {
         password: password.value
       })
     })
-      .then(() => router.push("/"))
+    .then(response => {
+        if(response.status === 200) {
+          response.json()
+            .then(data => {
+              localStorage.setItem("user", JSON.stringify({
+                username: username.value,
+                accessToken: data.accessToken
+              }))
+              isLoggedIn.value = true
+            })
+        } else {
+          response.json()
+            .then(data => error.value = data.err)
+        }
+      })
   }
 }
 
-const signUp = () => {
+const signup = () => {
   if (document.querySelector('form').reportValidity()) {
     fetch('http://localhost:8080/api/signup', {
       method: 'POST',
@@ -35,7 +51,14 @@ const signUp = () => {
     })
       .then(response => {
         if(response.status === 201) {
-          router.push("/")
+          response.json()
+            .then(data => {
+              localStorage.setItem("user", JSON.stringify({
+                username: username.value,
+                accessToken: data.accessToken
+              }))
+              isLoggedIn.value = true
+            })
         } else {
           response.json()
             .then(data => error.value = data.err)
@@ -43,11 +66,16 @@ const signUp = () => {
       })
   }
 }
+
+const logout = () => {
+  localStorage.removeItem("user")
+  isLoggedIn.value = false
+}
 </script>
 
 <template>
   <div id="outerDiv">
-    <form>
+    <form v-if="!isLoggedIn">
       <h1>Login</h1>
       <div>
         <input type="text" name="username" id="username" v-model="username" required placeholder="Username" />
@@ -56,11 +84,16 @@ const signUp = () => {
         <input type="password" name="password" id="password" v-model="password" required placeholder="Password" />
       </div>
       <div>
-        <input type="submit" value="Login" @click.prevent="login" />
-        <input type="submit" value="Sign Up" @click.prevent="signUp" />
+        <input type="submit" value="Log in" @click.prevent="login" />
+        <input type="submit" value="Sign up" @click.prevent="signup" />
       </div>
       <p id="error">{{ error }}</p>
     </form>
+    <div v-else>
+      <h1>Logged in as {{ username }}</h1>
+      <br>
+      <button @click="logout">Log out</button>
+    </div>
   </div>
 </template>
 
@@ -83,7 +116,7 @@ div {
   font-size: 18px;
 }
 
-input {
+input, button {
   background-color: transparent;
   border: 1px solid #3a3b52;
   outline: none;
@@ -94,12 +127,12 @@ input {
   transition: border-radius 0.2s;
 }
 
-input:focus,
-input:hover {
+input:focus, button:focus,
+input:hover, button:hover {
   border-radius: 5px;
 }
 
-input[type='submit'] {
+input[type='submit'], button {
   margin: 0 10px 0 0;
   padding: 12px 20px;
   height: initial;

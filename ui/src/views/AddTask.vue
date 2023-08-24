@@ -4,12 +4,15 @@ let name = ref()
 let dateDue = ref()
 let priority = ref('')
 
+let isLoggedIn = ref(localStorage.getItem("user") ? true : false)
+
 const submitForm = () => {
   if (document.querySelector('form').reportValidity()) {
     fetch('http://localhost:8080/api/addtask', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken
       },
       body: JSON.stringify({
         name: name.value,
@@ -32,7 +35,7 @@ const selectClass = computed(() => ({
 
 <template>
   <div id="outerDiv">
-    <form>
+    <form v-if="isLoggedIn">
       <h1>Add Task</h1>
       <div>
         <input type="text" name="name" id="name" v-model="name" required placeholder="Name" />
@@ -66,6 +69,7 @@ const selectClass = computed(() => ({
         <input type="submit" value="Add" @click.prevent="submitForm" />
       </div>
     </form>
+    <h1 v-else>Logged out</h1>
   </div>
 </template>
 
