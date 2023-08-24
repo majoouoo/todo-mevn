@@ -4,10 +4,12 @@ import TaskBody from '../components/TaskBody.vue'
 
 let tasklist = ref([])
 let tasklistCompleted = ref([])
-let isLoggedIn = ref(localStorage.getItem("user") ? true : false)
+
+import { store } from "../store.js"
+store.isLoggedIn = localStorage.getItem("user") ? true : false
 
 const fetchTasklist = () => {
-  if(isLoggedIn.value) {
+  if(store.isLoggedIn) {
     fetch('http://localhost:8080/api/tasklist', {
     headers: {
       "Authorization": "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken
@@ -67,7 +69,7 @@ const deleteTask = (task) => {
 </script>
 
 <template>
-  <div id="tasklist" v-if="isLoggedIn">
+  <div id="tasklist" v-if="store.isLoggedIn">
     <TaskBody
       v-for="task of tasklist"
       :key="task._id"
@@ -76,7 +78,7 @@ const deleteTask = (task) => {
       @deleteTask="deleteTask(task)"
     ></TaskBody>
   </div>
-  <div id="tasklistCompleted" v-if="isLoggedIn">
+  <div id="tasklistCompleted" v-if="store.isLoggedIn">
     <h3 id="tasklistCompletedTitle" v-if="tasklistCompleted.length > 0">Completed Tasks</h3>
     <TaskBody
       v-for="task of tasklistCompleted"
@@ -86,8 +88,8 @@ const deleteTask = (task) => {
       @deleteTask="deleteTask(task)"
     ></TaskBody>
   </div>
-  <h1 v-if="isLoggedIn && tasklist.length + tasklistCompleted.length == 0">No tasks</h1>
-  <h1 v-if="!isLoggedIn">Logged out</h1>
+  <h1 v-if="store.isLoggedIn && tasklist.length + tasklistCompleted.length == 0">No tasks</h1>
+  <h1 v-if="!store.isLoggedIn">Logged out</h1>
 
 </template>
 

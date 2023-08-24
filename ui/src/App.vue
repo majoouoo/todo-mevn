@@ -1,8 +1,8 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import { ref } from "vue"
 
-let isLoggedIn = ref(localStorage.getItem("user") ? true : false)
+import { store } from "./store.js"
+store.isLoggedIn = localStorage.getItem("user") ? true : false
 </script>
 
 <template>
@@ -30,7 +30,7 @@ let isLoggedIn = ref(localStorage.getItem("user") ? true : false)
       <div>
         <RouterLink to="/login"
           ><span class="material-symbols-outlined"> account_circle </span>
-          <p v-if="!isLoggedIn">Login</p>
+          <p v-if="!store.isLoggedIn">Login</p>
           <p v-else>Account</p>
           </RouterLink
         >

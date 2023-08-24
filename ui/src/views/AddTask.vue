@@ -4,7 +4,8 @@ let name = ref()
 let dateDue = ref()
 let priority = ref('')
 
-let isLoggedIn = ref(localStorage.getItem("user") ? true : false)
+import { store } from "../store.js"
+store.isLoggedIn = localStorage.getItem("user") ? true : false
 
 const submitForm = () => {
   if (document.querySelector('form').reportValidity()) {
@@ -35,7 +36,7 @@ const selectClass = computed(() => ({
 
 <template>
   <div id="outerDiv">
-    <form v-if="isLoggedIn">
+    <form v-if="store.isLoggedIn">
       <h1>Add Task</h1>
       <div>
         <input type="text" name="name" id="name" v-model="name" required placeholder="Name" />

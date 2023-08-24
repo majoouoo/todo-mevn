@@ -1,9 +1,10 @@
 <script setup>
 import { ref } from 'vue'
 
-let isLoggedIn = ref(localStorage.getItem("user") ? true : false)
+import { store } from "../store.js"
+store.isLoggedIn = localStorage.getItem("user") ? true : false
 
-let username = ref(isLoggedIn.value ? JSON.parse(localStorage.getItem("user")).username : "")
+let username = ref(store.isLoggedIn ? JSON.parse(localStorage.getItem("user")).username : "")
 let password = ref()
 let error = ref("")
 
@@ -27,7 +28,7 @@ const login = () => {
                 username: username.value,
                 accessToken: data.accessToken
               }))
-              isLoggedIn.value = true
+              store.isLoggedIn = true
             })
         } else {
           response.json()
@@ -57,7 +58,7 @@ const signup = () => {
                 username: username.value,
                 accessToken: data.accessToken
               }))
-              isLoggedIn.value = true
+              store.isLoggedIn = true
             })
         } else {
           response.json()
@@ -69,13 +70,13 @@ const signup = () => {
 
 const logout = () => {
   localStorage.removeItem("user")
-  isLoggedIn.value = false
+  store.isLoggedIn = false
 }
 </script>
 
 <template>
   <div id="outerDiv">
-    <form v-if="!isLoggedIn">
+    <form v-if="!store.isLoggedIn">
       <h1>Login</h1>
       <div>
         <input type="text" name="username" id="username" v-model="username" required placeholder="Username" />
