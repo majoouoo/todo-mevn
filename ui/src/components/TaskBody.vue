@@ -62,7 +62,7 @@ const editTask = () => {
         <button @click="editTask" id="editBtn" v-if="!editMode">
           <span class="material-symbols-outlined"> edit </span>
         </button>
-        <button @click="editTask" id="doneBtn" v-if="editMode">
+        <button @click="editTask(); $emit('sortTasks')" id="doneBtn" v-if="editMode">
           <span class="material-symbols-outlined"> done </span>
         </button>
         <button @click="$emit('deleteTask')" id="deleteBtn">

@@ -66,6 +66,11 @@ const deleteTask = (task) => {
     removeTaskFromList(task)
   })
 }
+
+const sortTasks = () => {
+  tasklist.value.sort((a, b) => a.dateDue - b.dateDue || a.priority - b.priority)
+  tasklistCompleted.value.sort((a, b) => a.dateDue - b.dateDue || a.priority - b.priority)
+}
 </script>
 
 <template>
@@ -76,6 +81,7 @@ const deleteTask = (task) => {
       :task="task"
       @completeTask="completeTask(task)"
       @deleteTask="deleteTask(task)"
+      @sortTasks="sortTasks"
     ></TaskBody>
   </div>
   <div id="tasklistCompleted" v-if="store.isLoggedIn">
@@ -86,6 +92,7 @@ const deleteTask = (task) => {
       :task="task"
       @completeTask="completeTask(task)"
       @deleteTask="deleteTask(task)"
+      @sortTasks="sortTasks"
     ></TaskBody>
   </div>
   <h1 v-if="store.isLoggedIn && tasklist.length + tasklistCompleted.length == 0">No tasks</h1>
