@@ -33,13 +33,24 @@ const editTask = () => {
   }
   editMode.value = !editMode.value
 }
+
+let completeBool = ref(taskMutable.value.complete)
+let completeIcon = ref()
+const changeIcon = () => {
+  if(completeBool.value) {
+    completeIcon.value = "task_alt"
+  } else {
+    completeIcon.value = "radio_button_unchecked"
+  }
+  completeBool.value = !completeBool.value
+}
+changeIcon()
 </script>
 
 <template>
   <div id="outerDiv">
     <button @click="$emit('completeTask')" id="checkBtn">
-      <span class="material-symbols-outlined" v-if="taskMutable.complete"> task_alt </span>
-      <span class="material-symbols-outlined" v-else> radio_button_unchecked </span>
+      <span class="material-symbols-outlined" @mouseenter="changeIcon" @mouseleave="changeIcon">{{ completeIcon }}</span>
     </button>
     <div id="innerDiv">
       <div id="textDiv">
