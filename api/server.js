@@ -170,3 +170,18 @@ app.delete("/api/deleteaccount", authenticate, (req, res) => {
         .then(() => res.status(200).json({ msg: "User and tasks deleted" }))
     })
 })
+
+app.patch("/api/edittask", authenticate, (req, res) => {
+  const taskId = req.query.id
+  const body = req.body
+  if (ObjectId.isValid(taskId)) {
+    tasks.updateOne(
+      { _id: new ObjectId(taskId), user: req.user.username },
+      { $set: { "name": body.name, "priority": body.priority } }
+    )
+      .then(() => res.status(200).json({ msg: "Task modified" }))
+      .catch((err) => res.status(500).json({ err: "Could not edit task", errCode: err }))
+  } else {
+    res.status(404).json({ err: "Invalid object ID" })
+  }
+})

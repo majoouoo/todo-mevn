@@ -4,36 +4,67 @@ import { onMounted, ref, computed } from 'vue'
 const props = defineProps({
   task: Object
 })
+let taskMutable = ref(props.task)
 
 let overdue = ref()
 onMounted(() => {
-  overdue.value = Date.parse(props.task.dateDue) < new Date() ? true : false
+  overdue.value = Date.parse(taskMutable.value.dateDue) < new Date() ? true : false
 })
 
 const priorityClass = computed(() => ({
-  firstPriority: (props.task.priority == 1) && (!props.task.complete),
-  secondPriority: (props.task.priority == 2) && (!props.task.complete)
+  firstPriority: (taskMutable.value.priority == 1) && (!taskMutable.value.complete),
+  secondPriority: (taskMutable.value.priority == 2) && (!taskMutable.value.complete)
 }))
+
+let editMode = ref(false)
+const editTask = () => {
+  if (editMode.value && document.querySelector('#taskNameInput').reportValidity()) {
+    fetch(`http://localhost:8080/api/edittask?id=${taskMutable.value._id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken
+      },
+      body: JSON.stringify({
+        name: taskMutable.value.name,
+        priority: taskMutable.value.priority
+      })
+    })
+  }
+  editMode.value = !editMode.value
+}
 </script>
 
 <template>
   <div id="outerDiv">
     <button @click="$emit('completeTask')" id="checkBtn">
-      <span class="material-symbols-outlined" v-if="task.complete"> task_alt </span>
+      <span class="material-symbols-outlined" v-if="taskMutable.complete"> task_alt </span>
       <span class="material-symbols-outlined" v-else> radio_button_unchecked </span>
     </button>
     <div id="innerDiv">
       <div id="textDiv">
-        <p id="taskName" :class="{ complete: task.complete }">{{ task.name }}</p>
-        <p id="dateDue" :class="{ complete: task.complete, overdue }">
-          {{ task.dateDue }}
-          <span id="priority" :class="[{ complete: task.complete }, priorityClass]">
+        <p id="taskName" :class="{ complete: taskMutable.complete }" v-if="!editMode">{{ taskMutable.name }}</p>
+        <input id="taskNameInput" type="text" v-model="taskMutable.name" required v-if="editMode">
+        <p id="dateDue" :class="{ complete: taskMutable.complete, overdue }">
+          {{ taskMutable.dateDue }}
+          <span id="priority" :class="[{ complete: taskMutable.complete }, priorityClass]">
             <span class="material-symbols-outlined"> flag </span>
-            {{ task.priority }}
+            <span id="priorityNumber" v-if="!editMode">{{ taskMutable.priority }}</span>
+            <select name="priority" id="priorityInput" v-model="taskMutable.priority" required v-if="editMode">
+              <option value="1" style="color: #fd7777">1</option>
+              <option value="2" style="color: #fdb877">2</option>
+              <option value="3" style="color: #e4e4e4">3</option>
+            </select>
           </span>
         </p>
       </div>
       <div id="buttonDiv">
+        <button @click="editTask" id="editBtn" v-if="!editMode">
+          <span class="material-symbols-outlined"> edit </span>
+        </button>
+        <button @click="editTask" id="doneBtn" v-if="editMode">
+          <span class="material-symbols-outlined"> done </span>
+        </button>
         <button @click="$emit('deleteTask')" id="deleteBtn">
           <span class="material-symbols-outlined"> delete </span>
         </button>
@@ -59,16 +90,31 @@ const priorityClass = computed(() => ({
   width: 100%;
 }
 
-p {
+p, #taskNameInput {
   font-weight: 600;
   font-size: 20px;
   line-height: 24px;
   overflow-wrap: anywhere;
 }
 
+#taskNameInput {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  background: linear-gradient(#4f50696e, #4f50696e) 0 80% / 100% 6px no-repeat;
+}
+
+#taskNameInput:focus {
+  outline: none;
+}
+
 p#dateDue {
   font-weight: 300;
   font-size: 16px;
+}
+
+select option {
+  background-color: #0f101a;
 }
 
 .overdue {
@@ -83,8 +129,12 @@ p#dateDue {
   text-decoration: line-through;
 }
 
-#textDiv * {
+#textDiv > * {
   margin: 0 10px;
+}
+
+#buttonDiv {
+  display: flex;
 }
 
 button {
@@ -100,6 +150,21 @@ button {
   cursor: pointer;
 }
 
+#priority {
+  margin: 0 10px;
+}
+
+#priorityNumber {
+  margin: 0 5px;
+}
+
+#priorityInput {
+  background-color: transparent;
+  border: none;
+  font-size: 16px;
+  margin: 0 1px;
+}
+
 #priority .material-symbols-outlined {
   font-size: 16px;
   font-variation-settings: 'FILL' , 'wght' 500, 'GRAD' 0, 'opsz' 16;
@@ -111,7 +176,7 @@ button {
   top: 2px;
 }
 
-#priority.complete .material-symbols-outlined {
+#priority.complete * {
   color: #4f5069; 
 }
 
