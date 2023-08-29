@@ -69,7 +69,7 @@ changeIcon()
 
 <template>
   <div id="outerDiv">
-    <button @click="$emit('completeTask')" id="checkBtn">
+    <button @click="$emit('completeTask')" id="checkBtn" title="Complete Task">
       <span class="material-symbols-outlined" @mouseenter="changeIcon" @mouseleave="changeIcon">{{ completeIcon }}</span>
     </button>
     
@@ -94,16 +94,16 @@ changeIcon()
       </div>
 
       <div id="buttonDiv">
-        <button @click="rescheduleTask()" id="rescheduleBtn">
+        <button @click="rescheduleTask()" id="rescheduleBtn" title="Reschedule Task">
           <span class="material-symbols-outlined"> calendar_month </span>
         </button>
-        <button @click="editTask" id="editBtn" v-if="!editMode">
+        <button @click="editTask" id="editBtn" v-if="!editMode" title="Edit Task">
           <span class="material-symbols-outlined"> edit </span>
         </button>
-        <button @click="editTask(); $emit('sortTasks')" id="doneBtn" v-if="editMode">
+        <button @click="editTask(); $emit('sortTasks')" id="doneBtn" v-if="editMode" title="Done">
           <span class="material-symbols-outlined"> done </span>
         </button>
-        <button @click="$emit('deleteTask')" id="deleteBtn">
+        <button @click="$emit('deleteTask')" id="deleteBtn" title="Delete Task">
           <span class="material-symbols-outlined"> delete </span>
         </button>
       </div>
