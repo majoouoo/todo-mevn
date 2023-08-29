@@ -1,15 +1,16 @@
 <script setup>
 import { onMounted, ref, computed } from 'vue'
+import DatePicker from "./DatePicker.vue"
 
+defineEmits(['completeTask', 'deleteTask', 'sortTasks'])
 const props = defineProps({
   task: Object
 })
 let taskMutable = ref(props.task)
 
 let overdue = ref()
-onMounted(() => {
-  overdue.value = Date.parse(taskMutable.value.dateDue) < new Date() ? true : false
-})
+const checkOverdue = () => overdue.value = Date.parse(taskMutable.value.dateDue) < new Date() ? true : false
+onMounted(checkOverdue)
 
 const priorityClass = computed(() => ({
   firstPriority: (taskMutable.value.priority == 1) && (!taskMutable.value.complete),
@@ -34,6 +35,25 @@ const editTask = () => {
   editMode.value = !editMode.value
 }
 
+let rescheduleMode = ref(false)
+const rescheduleTask = (day, month, year) => {
+  if(rescheduleMode.value && day != -1) {
+    fetch(`http://localhost:8080/api/rescheduletask?id=${taskMutable.value._id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken
+      },
+      body: JSON.stringify({
+        dateDue: new Date(year, month, day)
+      })
+    })
+      .then(taskMutable.value.dateDue = new Date(year, month, day).toDateString())
+  }
+  rescheduleMode.value = !rescheduleMode.value
+  checkOverdue()
+}
+
 let completeBool = ref(taskMutable.value.complete)
 let completeIcon = ref()
 const changeIcon = () => {
@@ -52,12 +72,15 @@ changeIcon()
     <button @click="$emit('completeTask')" id="checkBtn">
       <span class="material-symbols-outlined" @mouseenter="changeIcon" @mouseleave="changeIcon">{{ completeIcon }}</span>
     </button>
+    
     <div id="innerDiv">
       <div id="textDiv">
         <p id="taskName" :class="{ complete: taskMutable.complete }" v-if="!editMode">{{ taskMutable.name }}</p>
         <input id="taskNameInput" type="text" v-model="taskMutable.name" required v-if="editMode">
+
         <p id="dateDue" :class="{ complete: taskMutable.complete, overdue }">
           {{ taskMutable.dateDue }}
+
           <span id="priority" :class="[{ complete: taskMutable.complete }, priorityClass]">
             <span class="material-symbols-outlined"> flag </span>
             <span id="priorityNumber" v-if="!editMode">{{ taskMutable.priority }}</span>
@@ -69,7 +92,11 @@ changeIcon()
           </span>
         </p>
       </div>
+
       <div id="buttonDiv">
+        <button @click="rescheduleTask()" id="rescheduleBtn">
+          <span class="material-symbols-outlined"> calendar_month </span>
+        </button>
         <button @click="editTask" id="editBtn" v-if="!editMode">
           <span class="material-symbols-outlined"> edit </span>
         </button>
@@ -82,6 +109,8 @@ changeIcon()
       </div>
     </div>
   </div>
+
+  <DatePicker v-if="rescheduleMode" @done="(day, month, year) => { rescheduleTask(day, month, year); $emit('sortTasks') }"></DatePicker>
 </template>
 
 <style scoped>
@@ -112,7 +141,7 @@ p, #taskNameInput {
   background-color: transparent;
   border: none;
   padding: 0;
-  background: linear-gradient(#4f50696e, #4f50696e) 0 80% / 100% 6px no-repeat;
+  background: linear-gradient(#4f50696e, #4f50696e) 0 90% / 100% 6px no-repeat;
 }
 
 #taskNameInput:focus {

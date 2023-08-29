@@ -67,9 +67,17 @@ const deleteTask = (task) => {
   })
 }
 
+const sortingAlg = (a, b) => {
+  if(Date.parse(a.dateDue) - Date.parse(b.dateDue) != 0) {
+    return Date.parse(a.dateDue) - Date.parse(b.dateDue)
+  } else {
+    return a.priority - b.priority
+  }
+}
+
 const sortTasks = () => {
-  tasklist.value.sort((a, b) => a.dateDue - b.dateDue || a.priority - b.priority)
-  tasklistCompleted.value.sort((a, b) => a.dateDue - b.dateDue || a.priority - b.priority)
+  tasklist.value.sort((a, b) => sortingAlg(a, b))
+  tasklistCompleted.value.sort((a, b) => sortingAlg(a, b))
 }
 </script>
 

@@ -113,6 +113,36 @@ app.delete("/api/deletetask", authenticate, (req, res) => {
   }
 })
 
+app.patch("/api/edittask", authenticate, (req, res) => {
+  const taskId = req.query.id
+  const body = req.body
+  if (ObjectId.isValid(taskId)) {
+    tasks.updateOne(
+      { _id: new ObjectId(taskId), user: req.user.username },
+      { $set: { "name": body.name, "priority": body.priority } }
+    )
+      .then(() => res.status(200).json({ msg: "Task modified" }))
+      .catch((err) => res.status(500).json({ err: "Could not edit task", errCode: err }))
+  } else {
+    res.status(404).json({ err: "Invalid object ID" })
+  }
+})
+
+app.patch("/api/rescheduletask", authenticate, (req, res) => {
+  const taskId = req.query.id
+  const body = req.body
+  if (ObjectId.isValid(taskId)) {
+    tasks.updateOne(
+      { _id: new ObjectId(taskId), user: req.user.username },
+      { $set: { "dateDue": new Date(body.dateDue) } }
+    )
+      .then(() => res.status(200).json({ msg: "Task rescheduled" }))
+      .catch((err) => res.status(500).json({ err: "Could not reschedule task", errCode: err }))
+  } else {
+    res.status(404).json({ err: "Invalid object ID" })
+  }
+})
+
 // AUTH
 
 app.post("/api/signup", (req, res) => {
@@ -169,19 +199,4 @@ app.delete("/api/deleteaccount", authenticate, (req, res) => {
       tasks.deleteMany({ user: req.user.username })
         .then(() => res.status(200).json({ msg: "User and tasks deleted" }))
     })
-})
-
-app.patch("/api/edittask", authenticate, (req, res) => {
-  const taskId = req.query.id
-  const body = req.body
-  if (ObjectId.isValid(taskId)) {
-    tasks.updateOne(
-      { _id: new ObjectId(taskId), user: req.user.username },
-      { $set: { "name": body.name, "priority": body.priority } }
-    )
-      .then(() => res.status(200).json({ msg: "Task modified" }))
-      .catch((err) => res.status(500).json({ err: "Could not edit task", errCode: err }))
-  } else {
-    res.status(404).json({ err: "Invalid object ID" })
-  }
 })
