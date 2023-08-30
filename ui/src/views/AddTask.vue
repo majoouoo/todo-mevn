@@ -1,7 +1,9 @@
 <script setup>
 import { ref, computed } from 'vue'
+import DatePicker from "../components/DatePicker.vue"
+
 let name = ref()
-let dateDue = ref()
+let dateDue = ref(new Date())
 let priority = ref('')
 
 import { store } from "../store.js"
@@ -25,7 +27,6 @@ const submitForm = () => {
     name.value = ''
     dateDue.value = ''
     priority.value = ''
-    document.getElementById('dateDue').type = 'text'
   }
 }
 
@@ -38,20 +39,8 @@ const selectClass = computed(() => ({
   <div id="outerDiv">
     <form v-if="store.isLoggedIn">
       <h1>Add Task</h1>
-      <div>
+      <div id="inputDiv">
         <input type="text" name="name" id="name" v-model="name" required placeholder="Name" />
-      </div>
-      <div>
-        <input
-          type="text"
-          onfocus="(this.type='date')"
-          onfocusout="(this.type='text')"
-          name="dateDue"
-          id="dateDue"
-          v-model="dateDue"
-          required
-          placeholder="Date due"
-        />
         <select
           name="priority"
           id="priority"
@@ -66,6 +55,9 @@ const selectClass = computed(() => ({
           <option value="3">Priority 3</option>
         </select>
       </div>
+      <div id="datePicker">
+        <DatePicker :initialDate="new Date()" :isModal="false" @done="(day, month, year) => dateDue = new Date(year, month, day)"></DatePicker>
+      </div>
       <div>
         <input type="submit" value="Add" @click.prevent="submitForm" />
       </div>
@@ -79,18 +71,27 @@ const selectClass = computed(() => ({
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 20px 0;
 }
 
 h1 {
   font-size: 24px;
 }
 
-div {
-  margin: 20px 0;
-}
-
 * {
   font-size: 18px;
+}
+
+form {
+  display: grid;
+  grid-template-rows: auto auto auto;
+  gap: 20px;
+}
+
+#inputDiv {
+  display: grid;
+  grid-template-columns: auto 140px;
+  gap: 20px;
 }
 
 input,
@@ -99,8 +100,6 @@ select {
   border: 1px solid #3a3b52;
   outline: none;
   padding: 12px;
-  width: 400px;
-  height: 23px;
   border-radius: 50px;
   transition: border-radius 0.2s;
 }
@@ -112,25 +111,11 @@ select:hover {
   border-radius: 5px;
 }
 
-input#dateDue {
-  width: 260px;
-  margin: 0 10px 0 0;
-}
-
-select#priority {
-  width: 130px;
-  height: 49px;
-}
-
 input[type='submit'] {
   margin: 0;
   padding: 12px 20px;
   height: initial;
   width: initial;
-}
-
-input[type='date']::-webkit-calendar-picker-indicator {
-  filter: invert();
 }
 
 ::placeholder,
@@ -141,5 +126,10 @@ input[type='date']::-webkit-calendar-picker-indicator {
 
 select option {
   background-color: #0f101a;
+}
+
+#datePicker {
+  border: 1px solid #3a3b52;
+  border-radius: 30px;
 }
 </style>

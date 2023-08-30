@@ -9,7 +9,9 @@ const props = defineProps({
 let taskMutable = ref(props.task)
 
 let overdue = ref()
-const checkOverdue = () => overdue.value = taskMutable.value.dateDue < new Date() ? true : false
+const today = new Date()
+const dateToday = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+const checkOverdue = () => overdue.value = taskMutable.value.dateDue <= dateToday ? true : false
 onMounted(checkOverdue)
 
 const priorityClass = computed(() => ({
@@ -111,7 +113,7 @@ changeIcon()
   </div>
 
   <div id="backdrop" v-if="rescheduleMode">
-    <DatePicker v-if="rescheduleMode" :date="taskMutable.dateDue" @done="(day, month, year) => { rescheduleTask(day, month, year); $emit('sortTasks') }"></DatePicker>
+    <DatePicker v-if="rescheduleMode" :initialDate="taskMutable.dateDue" :isModal="true" @done="(day, month, year) => { rescheduleTask(day, month, year); $emit('sortTasks') }"></DatePicker>
   </div>
 </template>
 
@@ -243,5 +245,7 @@ button {
   justify-content: center;
   z-index: 2;
   backdrop-filter: blur(5px);
+  padding: 100px;
+  box-sizing: border-box;
 }
 </style>

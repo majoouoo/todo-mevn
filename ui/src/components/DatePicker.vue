@@ -1,14 +1,16 @@
 <script setup>
 import { ref } from "vue"
 
+defineEmits(['done'])
 const props = defineProps({
-  date: Object
+  initialDate: Object,
+  isModal: Boolean
 })
 
 const today = new Date()
 const dateToday = new Date(today.getFullYear(), today.getMonth(), today.getDate())
-let month = ref(props.date.getMonth())
-let year = ref(props.date.getFullYear())
+let month = ref(props.initialDate.getMonth())
+let year = ref(props.initialDate.getFullYear())
 let daysInMonth
 let firstDay = ref()
 let chosenDay = ref()
@@ -44,30 +46,30 @@ const nextMonth = () => {
 const chooseDay = (day) => {
   chosenDay.value = day
 }
-chooseDay(props.date.getDate())
+chooseDay(props.initialDate.getDate())
 </script>
 
 <template>
   <div id="modal">
     <header id="header">
       <h1>Set Date</h1>
-      <button id="doneBtn" @click="$emit('done', chosenDay, month, year)">Done</button>
+      <button id="doneBtn" v-if="isModal" @click="$emit('done', chosenDay, month, year)">Done</button>
     </header>
     <section id="content">
       <div id="month">
-        <button @click="prevMonth" id="prevMonth">
+        <button @click.prevent="prevMonth" id="prevMonth">
           <span class="material-symbols-outlined"> navigate_before </span>
         </button>
         <span id="chosenMonth">{{ new Date(year, month).toLocaleDateString('en-US', { month: "long" }) }} {{ year
         }}</span>
-        <button @click="nextMonth" id="nextMonth">
+        <button @click.prevent="nextMonth" id="nextMonth">
           <span class="material-symbols-outlined"> navigate_next </span>
         </button>
       </div>
       <div id="calendar">
         <div class="day" v-for="day of daysInMonth" :key="day"
           :class="{ firstDay: day == 1, chosenDay: day == chosenDay, today: new Date(year, month, day) - dateToday == 0 }"
-          @click="chooseDay(day)">
+          @click="chooseDay(day); if(!isModal) { $emit('done', chosenDay, month, year) };">
           {{ day }}
         </div>
       </div>
@@ -80,19 +82,19 @@ chooseDay(props.date.getDate())
   background-color: #0f101a;
   width: 500px;
   height: fit-content;
-  margin: 100px;
-  border-radius: 20px;
+  border-radius: 30px;
   border: 1px solid #171827;
   z-index: 3;
+  overflow: hidden;
 }
 
 #header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 5px 15px;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
+  padding: 5px 8px 5px 20px;
+  border-top-left-radius: 30px;
+  border-top-right-radius: 30px;
 }
 
 #doneBtn {
@@ -166,12 +168,12 @@ button {
   grid-column: v-bind("firstDay");
 }
 
+.today {
+  background-color: #171827;
+}
+
 .chosenDay {
   background-color: #e4e4e4;
   color: #0f101a;
-}
-
-.today {
-  background-color: #171827;
 }
 </style>
