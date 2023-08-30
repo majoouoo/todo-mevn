@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted, ref, computed } from 'vue'
 import DatePicker from "./DatePicker.vue"
+import DeleteModal from "./DeleteModal.vue"
 
 defineEmits(['completeTask', 'deleteTask', 'sortTasks'])
 const props = defineProps({
@@ -67,6 +68,8 @@ const changeIcon = () => {
   completeBool.value = !completeBool.value
 }
 changeIcon()
+
+let isDelModalVisible = ref(false)
 </script>
 
 <template>
@@ -105,14 +108,15 @@ changeIcon()
         <button @click="editTask(); $emit('sortTasks')" id="doneBtn" v-if="editMode" title="Done">
           <span class="material-symbols-outlined"> done </span>
         </button>
-        <button @click="$emit('deleteTask')" id="deleteBtn" title="Delete Task">
+        <button @click.exact="isDelModalVisible = true" @click.shift="$emit('deleteTask')" id="deleteBtn" title="Delete Task">
           <span class="material-symbols-outlined"> delete </span>
         </button>
+        <DeleteModal v-if="isDelModalVisible" @cancel="isDelModalVisible = false" @delete="$emit('deleteTask')" object="task"></DeleteModal>
       </div>
     </div>
   </div>
 
-  <div id="backdrop" v-if="rescheduleMode">
+  <div id="backdrop" v-if="rescheduleMode" @click.self="rescheduleMode = false">
     <DatePicker v-if="rescheduleMode" :initialDate="taskMutable.dateDue" :isModal="true" @done="(day, month, year) => { rescheduleTask(day, month, year); $emit('sortTasks') }"></DatePicker>
   </div>
 </template>

@@ -25,7 +25,6 @@ const submitForm = () => {
     })
 
     name.value = ''
-    dateDue.value = ''
     priority.value = ''
   }
 }

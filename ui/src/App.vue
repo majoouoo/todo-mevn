@@ -6,7 +6,7 @@ store.isLoggedIn = localStorage.getItem("user") ? true : false
 </script>
 
 <template>
-  <header>
+  <header id="mainHeader">
     <h1>To-Do List</h1>
     <nav>
       <div>
@@ -52,6 +52,10 @@ header {
   border-bottom: 1px solid #171827;
   position: sticky;
   top: 0;
+}
+
+#mainHeader {
+  z-index: 2;
 }
 
 header * {

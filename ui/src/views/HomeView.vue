@@ -4,6 +4,7 @@ import TaskBody from '../components/TaskBody.vue'
 
 let tasklist = ref([])
 let tasklistCompleted = ref([])
+let noTasks = ref(false)
 
 import { store } from "../store.js"
 store.isLoggedIn = localStorage.getItem("user") ? true : false
@@ -17,6 +18,7 @@ const fetchTasklist = () => {
   })
     .then((response) => response.json())
     .then((body) => {
+      if(body.length == 0) noTasks.value = true
       for(let i = 0; i < body.length; i++) {
         const task = body[i]
         task.dateDue = new Date(Date.parse(task.dateDue))
@@ -38,6 +40,7 @@ const removeTaskFromList = (task) => {
     const index = tasklist.value.findIndex((taskFromList) => taskFromList._id == taskId)
     tasklist.value.splice(index, 1)
   }
+  if(tasklist.value.length + tasklistCompleted.value.length == 0) noTasks.value = true
 }
 
 const completeTask = (task) => {
@@ -103,7 +106,8 @@ const sortTasks = () => {
       @sortTasks="sortTasks"
     ></TaskBody>
   </div>
-  <h1 v-if="store.isLoggedIn && tasklist.length + tasklistCompleted.length == 0">No tasks</h1>
+
+  <h1 v-if="noTasks">No tasks</h1>
   <h1 v-if="!store.isLoggedIn">Logged out</h1>
 
 </template>

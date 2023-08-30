@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import DeleteModal from "../components/DeleteModal.vue"
 
 import { store } from "../store.js"
 store.isLoggedIn = localStorage.getItem("user") ? true : false
@@ -75,6 +76,7 @@ const logout = () => {
   store.isLoggedIn = false
 }
 
+let isDelModalVisible = ref(false)
 const deleteAccount = () => {
   fetch('http://localhost:8080/api/deleteaccount', {
     method: 'DELETE',
@@ -82,7 +84,10 @@ const deleteAccount = () => {
       'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem("user")).accessToken
     }
   })
-    .then(logout())
+    .then(() => {
+      logout()
+      isDelModalVisible.value = false
+    })
 }
 </script>
 
@@ -106,7 +111,8 @@ const deleteAccount = () => {
       <h1>Logged in as {{ username }}</h1>
       <br>
       <button @click="logout">Log out</button>
-      <button @click="deleteAccount">Delete account</button>
+      <button @click="isDelModalVisible = true">Delete account</button>
+      <DeleteModal v-if="isDelModalVisible" @cancel="isDelModalVisible = false" @delete="deleteAccount" object="account"></DeleteModal>
     </div>
   </div>
 </template>
