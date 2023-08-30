@@ -68,5 +68,6 @@ button:hover {
 p {
   color: #3a3b52;
   font-style: italic;
+  margin: 20px 0 0 0;
 }
 </style>

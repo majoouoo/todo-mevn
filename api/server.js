@@ -51,6 +51,9 @@ const authenticate = (req, res, next) => {
   })
 }
 
+const authRoutes = require("./auth")
+app.use("/auth", authRoutes)
+
 app.get("/api/tasklist", authenticate, (req, res) => {
   let tasklist = []
   tasks.find({
@@ -141,62 +144,4 @@ app.patch("/api/rescheduletask", authenticate, (req, res) => {
   } else {
     res.status(404).json({ err: "Invalid object ID" })
   }
-})
-
-// AUTH
-
-app.post("/api/signup", (req, res) => {
-  users.findOne({ username: req.body.username })
-    .then((result) => {
-      if (!result) {
-        bcrypt.hash(req.body.password, 10)
-          .then((hash) => {
-            users.insertOne({
-              username: req.body.username,
-              password: hash
-            })
-              .then(() => {
-                const accessToken = jwt.sign({
-                  username: req.body.username,
-                  password: hash
-                }, process.env.ACCESS_TOKEN_SECRET)
-                res.status(201).json({ accessToken: accessToken })
-              })
-              .catch((err) => res.status(500).json({ err: "Failed to write to DB", errCode: err }))
-          })
-          .catch((err) => res.status(500).json({ err: "Failed to hash password", errCode: err }))
-      } else {
-        res.status(409).json({ err: "Username is unavailable" })
-      }
-    })
-})
-
-app.post("/api/login", (req, res) => {
-  users.findOne({ username: req.body.username })
-    .then((user) => {
-      if(user) {
-        bcrypt.compare(req.body.password, user.password)
-          .then((pwCorrect) => {
-            if(pwCorrect) {
-              const accessToken = jwt.sign({
-                username: user.username,
-                password: user.password
-              }, process.env.ACCESS_TOKEN_SECRET)
-              res.status(200).json({ accessToken: accessToken })
-            } else {
-              res.status(403).json({ err: "Wrong password" })
-            }
-          })
-      } else {
-        res.status(404).json({ err: "User does not exist" })
-      }
-    })
-})
-
-app.delete("/api/deleteaccount", authenticate, (req, res) => {
-  users.deleteOne({ username: req.user.username })
-    .then(() => {
-      tasks.deleteMany({ user: req.user.username })
-        .then(() => res.status(200).json({ msg: "User and tasks deleted" }))
-    })
 })

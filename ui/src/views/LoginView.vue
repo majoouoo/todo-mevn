@@ -11,7 +11,7 @@ let error = ref("")
 
 const login = () => {
   if (document.querySelector('form').reportValidity()) {
-    fetch('http://localhost:8080/api/login', {
+    fetch('http://localhost:8080/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -42,7 +42,7 @@ const login = () => {
 
 const signup = () => {
   if (document.querySelector('form').reportValidity()) {
-    fetch('http://localhost:8080/api/signup', {
+    fetch('http://localhost:8080/auth/signup', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -78,7 +78,7 @@ const logout = () => {
 
 let isDelModalVisible = ref(false)
 const deleteAccount = () => {
-  fetch('http://localhost:8080/api/deleteaccount', {
+  fetch('http://localhost:8080/auth/deleteaccount', {
     method: 'DELETE',
     headers: {
       'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem("user")).accessToken
@@ -111,7 +111,7 @@ const deleteAccount = () => {
       <h1>Logged in as {{ username }}</h1>
       <br>
       <button @click="logout">Log out</button>
-      <button @click="isDelModalVisible = true">Delete account</button>
+      <button @click="isDelModalVisible = true" id="deleteBtn">Delete account</button>
       <DeleteModal v-if="isDelModalVisible" @cancel="isDelModalVisible = false" @delete="deleteAccount" object="account"></DeleteModal>
     </div>
   </div>
@@ -165,6 +165,11 @@ input[type='submit'], button {
 }
 
 #error {
+  color: #fd7777;
+}
+
+#deleteBtn {
+  border: 1px solid #fd7777;
   color: #fd7777;
 }
 </style>
