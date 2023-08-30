@@ -19,7 +19,7 @@ const fetchTasklist = () => {
     .then((body) => {
       for(let i = 0; i < body.length; i++) {
         const task = body[i]
-        task.dateDue = new Date(Date.parse(task.dateDue)).toDateString()
+        task.dateDue = new Date(Date.parse(task.dateDue))
         task.index = i
         task.complete ? tasklistCompleted.value.push(task) : tasklist.value.push(task)
       }

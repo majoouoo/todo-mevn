@@ -9,7 +9,7 @@ const props = defineProps({
 let taskMutable = ref(props.task)
 
 let overdue = ref()
-const checkOverdue = () => overdue.value = Date.parse(taskMutable.value.dateDue) < new Date() ? true : false
+const checkOverdue = () => overdue.value = taskMutable.value.dateDue < new Date() ? true : false
 onMounted(checkOverdue)
 
 const priorityClass = computed(() => ({
@@ -48,7 +48,7 @@ const rescheduleTask = (day, month, year) => {
         dateDue: new Date(year, month, day)
       })
     })
-      .then(taskMutable.value.dateDue = new Date(year, month, day).toDateString())
+      .then(taskMutable.value.dateDue = new Date(year, month, day))
   }
   rescheduleMode.value = !rescheduleMode.value
   checkOverdue()
@@ -79,7 +79,7 @@ changeIcon()
         <input id="taskNameInput" type="text" v-model="taskMutable.name" required v-if="editMode">
 
         <p id="dateDue" :class="{ complete: taskMutable.complete, overdue }">
-          {{ taskMutable.dateDue }}
+          {{ taskMutable.dateDue.toDateString() }}
 
           <span id="priority" :class="[{ complete: taskMutable.complete }, priorityClass]">
             <span class="material-symbols-outlined"> flag </span>
@@ -110,7 +110,9 @@ changeIcon()
     </div>
   </div>
 
-  <DatePicker v-if="rescheduleMode" @done="(day, month, year) => { rescheduleTask(day, month, year); $emit('sortTasks') }"></DatePicker>
+  <div id="backdrop" v-if="rescheduleMode">
+    <DatePicker v-if="rescheduleMode" :date="taskMutable.dateDue" @done="(day, month, year) => { rescheduleTask(day, month, year); $emit('sortTasks') }"></DatePicker>
+  </div>
 </template>
 
 <style scoped>
@@ -228,5 +230,18 @@ button {
 #priority.secondPriority,
 #priority.secondPriority * {
   color: #fdb877;
+}
+
+#backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  z-index: 2;
+  backdrop-filter: blur(5px);
 }
 </style>

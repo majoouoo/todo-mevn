@@ -1,9 +1,14 @@
 <script setup>
 import { ref } from "vue"
 
+const props = defineProps({
+  date: Object
+})
+
 const today = new Date()
-let month = ref(today.getMonth())
-let year = ref(today.getFullYear())
+const dateToday = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+let month = ref(props.date.getMonth())
+let year = ref(props.date.getFullYear())
 let daysInMonth
 let firstDay = ref()
 let chosenDay = ref()
@@ -39,60 +44,55 @@ const nextMonth = () => {
 const chooseDay = (day) => {
   chosenDay.value = day
 }
+chooseDay(props.date.getDate())
 </script>
 
 <template>
-  <div id="backdrop" @click.self="$emit('done', chosenDay, month, year)">
-    <div id="modal">
-      <div id="header">
-        <h1>Set Date</h1>
-        <button id="doneBtn" @click="$emit('done', chosenDay, month, year)">Done</button>
-      </div>
+  <div id="modal">
+    <header id="header">
+      <h1>Set Date</h1>
+      <button id="doneBtn" @click="$emit('done', chosenDay, month, year)">Done</button>
+    </header>
+    <section id="content">
       <div id="month">
         <button @click="prevMonth" id="prevMonth">
           <span class="material-symbols-outlined"> navigate_before </span>
         </button>
-        <span id="chosenMonth">{{ new Date(year, month).toLocaleDateString('default', { month: "long" }) }} {{ year }}</span>
+        <span id="chosenMonth">{{ new Date(year, month).toLocaleDateString('en-US', { month: "long" }) }} {{ year
+        }}</span>
         <button @click="nextMonth" id="nextMonth">
           <span class="material-symbols-outlined"> navigate_next </span>
         </button>
       </div>
       <div id="calendar">
-        <div class="day" v-for="day of daysInMonth" :key="day" :class="{ firstDay: day == 1, chosenDay: day == chosenDay }" @click="chooseDay(day)">
+        <div class="day" v-for="day of daysInMonth" :key="day"
+          :class="{ firstDay: day == 1, chosenDay: day == chosenDay, today: new Date(year, month, day) - dateToday == 0 }"
+          @click="chooseDay(day)">
           {{ day }}
         </div>
       </div>
-    </div>
+    </section>
   </div>
 </template>
 
 <style scoped>
-#backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
-  display: flex;
-  justify-content: center;
-  z-index: 2;
-}
-
 #modal {
   background-color: #0f101a;
   width: 500px;
   height: fit-content;
   margin: 100px;
-  padding: 20px;
   border-radius: 20px;
   border: 1px solid #171827;
+  z-index: 3;
 }
 
 #header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 5px 15px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
 }
 
 #doneBtn {
@@ -110,6 +110,10 @@ const chooseDay = (day) => {
 
 #doneBtn:hover {
   border-radius: 5px;
+}
+
+#content {
+  padding: 20px;
 }
 
 #calendar {
@@ -165,5 +169,9 @@ button {
 .chosenDay {
   background-color: #e4e4e4;
   color: #0f101a;
+}
+
+.today {
+  background-color: #171827;
 }
 </style>
