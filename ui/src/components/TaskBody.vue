@@ -12,7 +12,7 @@ let taskMutable = ref(props.task)
 let overdue = ref()
 const today = new Date()
 const dateToday = new Date(today.getFullYear(), today.getMonth(), today.getDate())
-const checkOverdue = () => overdue.value = taskMutable.value.dateDue <= dateToday ? true : false
+const checkOverdue = () => overdue.value = taskMutable.value.dateDue < dateToday
 onMounted(checkOverdue)
 
 const priorityClass = computed(() => ({

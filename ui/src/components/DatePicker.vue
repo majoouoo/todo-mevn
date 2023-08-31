@@ -66,6 +66,15 @@ chooseDay(props.initialDate.getDate())
           <span class="material-symbols-outlined"> navigate_next </span>
         </button>
       </div>
+      <div id="weekDays">
+        <span>Mon</span>
+        <span>Tue</span>
+        <span>Wed</span>
+        <span>Thu</span>
+        <span>Fri</span>
+        <span>Sat</span>
+        <span>Sun</span>
+      </div>
       <div id="calendar">
         <div class="day" v-for="day of daysInMonth" :key="day"
           :class="{ firstDay: day == 1, chosenDay: day == chosenDay, today: new Date(year, month, day) - dateToday == 0 }"
@@ -116,6 +125,15 @@ chooseDay(props.initialDate.getDate())
 
 #content {
   padding: 20px;
+}
+
+#weekDays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  text-align: center;
+  font-weight: lighter;
+  margin: 10px 0;
 }
 
 #calendar {
