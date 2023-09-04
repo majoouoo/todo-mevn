@@ -6,93 +6,68 @@ store.isLoggedIn = localStorage.getItem("user") ? true : false
 </script>
 
 <template>
-  <header id="mainHeader">
+  <header>
     <h1>To-Do List</h1>
     <nav>
-      <div>
-        <RouterLink to="/"
-          ><span class="material-symbols-outlined"> home </span>
-          <p>Home</p></RouterLink
-        >
-      </div>
-      <div>
-        <RouterLink to="/add-task"
-          ><span class="material-symbols-outlined"> add_circle </span>
-          <p>Add Task</p></RouterLink
-        >
-      </div>
-      <!-- <div>
-        <RouterLink to="/calendar"
-          ><span class="material-symbols-outlined"> calendar_month </span>
-          <p>Calendar</p></RouterLink
-        >
-      </div> -->
-      <div>
-        <RouterLink to="/login"
-          ><span class="material-symbols-outlined"> account_circle </span>
-          <p v-if="!store.isLoggedIn">Login</p>
-          <p v-else>Account</p>
-          </RouterLink
-        >
-      </div>
+      <RouterLink to="/" v-if="store.isLoggedIn">
+        <span class="material-symbols-outlined"> home </span>
+        <h2>Home</h2>
+      </RouterLink>
+      <RouterLink to="/add-task" v-if="store.isLoggedIn">
+        <span class="material-symbols-outlined"> add_circle </span>
+        <h2>Add Task</h2>
+      </RouterLink>
+      <RouterLink to="/login">
+        <span class="material-symbols-outlined"> account_circle </span>
+        <h2 v-if="!store.isLoggedIn">Login</h2>
+        <h2 v-else>Account</h2>
+      </RouterLink>
     </nav>
   </header>
 
-  <RouterView />
+  <section id="view">
+    <RouterView />
+  </section>
 </template>
 
-<style>
+<style scoped>
 header {
   display: flex;
   justify-content: space-between;
   height: 6vh;
   padding: 0 0 0 20px;
   align-items: center;
-  background-color: #11121d;
-  border-bottom: 1px solid #171827;
+  background-color: var(--dark-green);
   position: sticky;
   top: 0;
-}
-
-#mainHeader {
-  z-index: 2;
+  box-shadow: 0 4px 20px rgba(56, 102, 65, 0.5);
+  z-index: 3;
 }
 
 header * {
-  color: #e4e4e4;
+  color: var(--white);
 }
 
-h1 {
-  margin: 0;
-  font-weight: 700;
-  font-size: 24px;
+nav {
+  display: flex;
 }
 
-nav div {
+nav a {
   display: inline-block;
-}
-
-nav div a {
   margin: 0 10px;
-  font-weight: 500;
-  font-size: 18px;
   display: flex;
   align-items: center;
-  border-radius: 20px;
   padding: 5px 20px;
 }
 
-nav div a * {
+nav a * {
   margin: 0 5px;
-}
-
-nav div a p {
-  color: #4f5069;
+  color: var(--light-green);
+  font-weight: 500;
 }
 
 .material-symbols-outlined {
   font-size: 1.5em;
-  color: #4f5069;
 }
 
 .material-symbols-outlined {
@@ -104,6 +79,24 @@ nav div a p {
 }
 
 .router-link-active * {
-  color: #e4e4e4;
+  color: var(--lime);
 }
+
+/* #wrapper {
+  background-color: var(--dark-green);
+  padding: 0 20px 20px 20px;
+  box-sizing: border-box;
+  z-index: 2;
+  height: 94vh;
+  width: 100%;
+  position: sticky;
+  top: 6vh;
+  left: 0;
+}
+
+#view {
+  background-color: var(--tan);
+  border-radius: 15px;
+  min-height: calc(94vh - 40px);
+} */
 </style>

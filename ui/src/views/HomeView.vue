@@ -85,7 +85,7 @@ const sortTasks = () => {
 </script>
 
 <template>
-  <div id="tasklist" v-if="store.isLoggedIn">
+  <section id="tasklist" v-if="store.isLoggedIn">
     <TaskBody
       v-for="task of tasklist"
       :key="task._id"
@@ -94,9 +94,9 @@ const sortTasks = () => {
       @deleteTask="deleteTask(task)"
       @sortTasks="sortTasks"
     ></TaskBody>
-  </div>
-  <div id="tasklistCompleted" v-if="store.isLoggedIn">
-    <h3 id="tasklistCompletedTitle" v-if="tasklistCompleted.length > 0">Completed Tasks</h3>
+  </section>
+  <h1 id="tasklist-completed-title" v-if="tasklistCompleted.length > 0">Completed Tasks</h1>
+  <section id="tasklist-completed" v-if="store.isLoggedIn">
     <TaskBody
       v-for="task of tasklistCompleted"
       :key="task._id"
@@ -105,7 +105,7 @@ const sortTasks = () => {
       @deleteTask="deleteTask(task)"
       @sortTasks="sortTasks"
     ></TaskBody>
-  </div>
+  </section>
 
   <h1 v-if="noTasks">No tasks</h1>
   <h1 v-if="!store.isLoggedIn">Logged out</h1>
@@ -117,13 +117,9 @@ const sortTasks = () => {
   overflow-y: auto;
 }
 
-#tasklistCompletedTitle {
+#tasklist-completed-title {
+  font-size: 20px;
   color: #595a75;
-  margin: 20px;
-}
-
-h1 {
-  text-align: center;
   margin: 20px;
 }
 </style>

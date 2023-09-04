@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue"
+import { ref, watch } from "vue"
 
 defineEmits(['done'])
 const props = defineProps({
@@ -23,6 +23,14 @@ const calculateMonth = () => {
 }
 calculateMonth()
 
+watch(month, () => {
+  calculateMonth()
+})
+
+watch(year, () => {
+  calculateMonth()
+})
+
 const prevMonth = () => {
   if(month.value == 0) {
     month.value = 11
@@ -30,7 +38,6 @@ const prevMonth = () => {
   } else {
     month.value--
   }
-  calculateMonth()
 }
 
 const nextMonth = () => {
@@ -40,7 +47,6 @@ const nextMonth = () => {
   } else {
     month.value++
   }
-  calculateMonth()
 }
 
 const chooseDay = (day) => {
@@ -50,90 +56,73 @@ chooseDay(props.initialDate.getDate())
 </script>
 
 <template>
-  <div id="modal">
-    <header id="header">
+  <div class="modal">
+    <header>
       <h1>Set Date</h1>
-      <button id="doneBtn" v-if="isModal" @click="$emit('done', chosenDay, month, year)">Done</button>
+      <button class="default-button primary-button" v-if="isModal" @click="$emit('done', chosenDay, month, year)">Done</button>
     </header>
+
     <section id="content">
-      <div id="month">
-        <button @click.prevent="prevMonth" id="prevMonth">
+      <section id="month">
+        <button @click.prevent="prevMonth" class="icon-button">
           <span class="material-symbols-outlined"> navigate_before </span>
         </button>
-        <span id="chosenMonth">{{ new Date(year, month).toLocaleDateString('en-US', { month: "long" }) }} {{ year
-        }}</span>
-        <button @click.prevent="nextMonth" id="nextMonth">
+        <span id="chosen-month">{{ new Date(year, month).toLocaleDateString('en-US', { month: "long" }) }} <input type="text" v-model="year" id="chosen-year"></span>
+        <button @click.prevent="nextMonth" class="icon-button">
           <span class="material-symbols-outlined"> navigate_next </span>
         </button>
-      </div>
-      <div id="weekDays">
-        <span>Mon</span>
-        <span>Tue</span>
-        <span>Wed</span>
-        <span>Thu</span>
-        <span>Fri</span>
-        <span>Sat</span>
-        <span>Sun</span>
-      </div>
-      <div id="calendar">
+      </section>
+
+      <section id="week-days">
+        <h2>Mon</h2>
+        <h2>Tue</h2>
+        <h2>Wed</h2>
+        <h2>Thu</h2>
+        <h2>Fri</h2>
+        <h2>Sat</h2>
+        <h2>Sun</h2>
+      </section>
+
+      <section id="calendar">
         <div class="day" v-for="day of daysInMonth" :key="day"
-          :class="{ firstDay: day == 1, chosenDay: day == chosenDay, today: new Date(year, month, day) - dateToday == 0 }"
+          :class="{ 'first-day': day == 1, 'chosen-day': day == chosenDay, 'today': new Date(year, month, day) - dateToday == 0 }"
           @click="chooseDay(day); if(!isModal) { $emit('done', chosenDay, month, year) };">
           {{ day }}
         </div>
-      </div>
+      </section>
     </section>
   </div>
 </template>
 
 <style scoped>
-#modal {
-  background-color: #0f101a;
-  width: 500px;
-  height: fit-content;
-  border-radius: 30px;
-  border: 1px solid #171827;
-  z-index: 3;
-  overflow: hidden;
-}
-
-#header {
+header {
+  background-color: var(--dark-green);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 5px 8px 5px 20px;
-  border-top-left-radius: 30px;
-  border-top-right-radius: 30px;
+  padding: 10px;
 }
 
-#doneBtn {
-  background-color: transparent;
-  border: 1px solid #3a3b52;
-  outline: none;
-  border-radius: 50px;
-  transition: border-radius 0.2s;
-  margin: 0;
-  padding: 12px 20px;
-  height: initial;
-  width: initial;
-  font-size: 18px;
-}
-
-#doneBtn:hover {
-  border-radius: 5px;
+h1 {
+  color: var(--lime);
+  margin-left: 10px;
 }
 
 #content {
   padding: 20px;
 }
 
-#weekDays {
+#week-days {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 10px;
   text-align: center;
-  font-weight: lighter;
   margin: 10px 0;
+}
+
+#week-days * {
+  color: var(--light-green);
+  font-weight: 300;
 }
 
 #calendar {
@@ -141,7 +130,6 @@ chooseDay(props.initialDate.getDate())
   grid-template-columns: repeat(7, 1fr);
   grid-template-rows: repeat(v-bind("daysInMonth") / 7, 1fr);
   gap: 10px;
-  margin: 10px 0 0 0;
 }
 
 #month {
@@ -151,12 +139,17 @@ chooseDay(props.initialDate.getDate())
   justify-content: center;
 }
 
-#chosenMonth {
+#chosen-month {
   min-width: 150px;
   text-align: center;
 }
 
-button {
+#chosen-year {
+  border: none;
+  width: 45px;
+}
+
+.icon-button {
   background-color: transparent;
   border: none;
   display: flex;
@@ -178,20 +171,21 @@ button {
 }
 
 .day:hover {
-  border: 1px solid #3a3b52;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 10px #00000015;
   cursor: pointer;
 }
 
-.firstDay {
+.first-day {
   grid-column: v-bind("firstDay");
 }
 
 .today {
-  background-color: #171827;
+  background-color: #00000015;
 }
 
-.chosenDay {
-  background-color: #e4e4e4;
-  color: #0f101a;
+.chosen-day {
+  background-color: var(--dark-green);
+  color: var(--lime);
 }
 </style>

@@ -16,13 +16,13 @@ const checkOverdue = () => overdue.value = taskMutable.value.dateDue < dateToday
 onMounted(checkOverdue)
 
 const priorityClass = computed(() => ({
-  firstPriority: (taskMutable.value.priority == 1) && (!taskMutable.value.complete),
-  secondPriority: (taskMutable.value.priority == 2) && (!taskMutable.value.complete)
+  'first-priority': (taskMutable.value.priority == 1) && (!taskMutable.value.complete),
+  'second-priority': (taskMutable.value.priority == 2) && (!taskMutable.value.complete)
 }))
 
 let editMode = ref(false)
 const editTask = () => {
-  if (editMode.value && document.querySelector('#taskNameInput').reportValidity()) {
+  if (editMode.value && document.querySelector('#task-name-input').reportValidity()) {
     fetch(`http://localhost:8080/api/edittask?id=${taskMutable.value._id}`, {
       method: 'PATCH',
       headers: {
@@ -73,116 +73,112 @@ let isDelModalVisible = ref(false)
 </script>
 
 <template>
-  <div id="outerDiv">
-    <button @click="$emit('completeTask')" id="checkBtn" title="Complete Task">
+  <div id="wrapper" :class="{ complete: taskMutable.complete }">
+    <button @click="$emit('completeTask')" id="check-btn" title="Complete Task">
       <span class="material-symbols-outlined" @mouseenter="changeIcon" @mouseleave="changeIcon">{{ completeIcon }}</span>
     </button>
     
-    <div id="innerDiv">
-      <div id="textDiv">
-        <p id="taskName" :class="{ complete: taskMutable.complete }" v-if="!editMode">{{ taskMutable.name }}</p>
-        <input id="taskNameInput" type="text" v-model="taskMutable.name" required v-if="editMode">
+    <section id="content">
+      <section id="text">
+        <h1 id="task-name" v-if="!editMode">{{ taskMutable.name }}</h1>
+        <input id="task-name-input" type="text" v-model="taskMutable.name" required v-if="editMode">
 
-        <p id="dateDue" :class="{ complete: taskMutable.complete, overdue }">
-          {{ taskMutable.dateDue.toDateString() }}
+        <div id="subtitle">
+          <h2 id="date-due" :class="{ overdue }">
+            {{ taskMutable.dateDue.toDateString() }}
+          </h2>
 
-          <span id="priority" :class="[{ complete: taskMutable.complete }, priorityClass]">
-            <span class="material-symbols-outlined"> flag </span>
-            <span id="priorityNumber" v-if="!editMode">{{ taskMutable.priority }}</span>
-            <select name="priority" id="priorityInput" v-model="taskMutable.priority" required v-if="editMode">
-              <option value="1" style="color: #fd7777">1</option>
-              <option value="2" style="color: #fdb877">2</option>
-              <option value="3" style="color: #e4e4e4">3</option>
+          <h2 id="priority" :class="priorityClass">
+            <span class="material-symbols-outlined"> crisis_alert </span>
+            <span id="priority-number" v-if="!editMode">{{ taskMutable.priority }}</span>
+            <select name="priority" id="priority-input" v-model="taskMutable.priority" required v-if="editMode">
+              <option value="1" style="color: var(--first-p)">1</option>
+              <option value="2" style="color: var(--second-p)">2</option>
+              <option value="3" style="color: var(--black)">3</option>
             </select>
-          </span>
-        </p>
-      </div>
+          </h2>
+        </div>
+      </section>
 
-      <div id="buttonDiv">
-        <button @click="rescheduleTask()" id="rescheduleBtn" title="Reschedule Task">
+      <section id="buttons">
+        <button @click="rescheduleTask()" id="reschedule-btn" title="Reschedule Task">
           <span class="material-symbols-outlined"> calendar_month </span>
         </button>
-        <button @click="editTask" id="editBtn" v-if="!editMode" title="Edit Task">
+        <button @click="editTask" id="edit-btn" v-if="!editMode" title="Edit Task">
           <span class="material-symbols-outlined"> edit </span>
         </button>
-        <button @click="editTask(); $emit('sortTasks')" id="doneBtn" v-if="editMode" title="Done">
+        <button @click="editTask(); $emit('sortTasks')" id="done-btn" v-if="editMode" title="Done">
           <span class="material-symbols-outlined"> done </span>
         </button>
-        <button @click.exact="isDelModalVisible = true" @click.shift="$emit('deleteTask')" id="deleteBtn" title="Delete Task">
+        <button @click.exact="isDelModalVisible = true" @click.shift="$emit('deleteTask')" id="delete-btn" title="Delete Task">
           <span class="material-symbols-outlined"> delete </span>
         </button>
-        <DeleteModal v-if="isDelModalVisible" @cancel="isDelModalVisible = false" @delete="$emit('deleteTask')" object="task"></DeleteModal>
-      </div>
-    </div>
+      </section>
+    </section>
   </div>
 
-  <div id="backdrop" v-if="rescheduleMode" @click.self="rescheduleMode = false">
+  <div class="backdrop" v-if="isDelModalVisible" @click.self="isDelModalVisible = false">
+    <DeleteModal v-if="isDelModalVisible" @cancel="isDelModalVisible = false" @delete="$emit('deleteTask')" object="task"></DeleteModal>
+  </div>
+
+  <div class="backdrop" v-if="rescheduleMode" @click.self="rescheduleMode = false">
     <DatePicker v-if="rescheduleMode" :initialDate="taskMutable.dateDue" :isModal="true" @done="(day, month, year) => { rescheduleTask(day, month, year); $emit('sortTasks') }"></DatePicker>
   </div>
 </template>
 
 <style scoped>
-#outerDiv {
-  background-color: transparent;
-  border: 1px solid #171827;
+#wrapper {
+  background: linear-gradient(45deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(5px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
   margin: 20px;
-  padding: 10px;
-  border-radius: 5px;
+  padding: 20px 10px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
 }
 
-#innerDiv {
+#content {
   display: flex;
   justify-content: space-between;
   width: 100%;
 }
 
-p, #taskNameInput {
+#text {
+  margin: 0 10px;
+}
+
+h1, #task-name-input {
   font-weight: 600;
   font-size: 20px;
   line-height: 24px;
   overflow-wrap: anywhere;
 }
 
-#taskNameInput {
+#task-name-input {
   background-color: transparent;
   border: none;
   padding: 0;
   background: linear-gradient(#4f50696e, #4f50696e) 0 90% / 100% 6px no-repeat;
 }
 
-#taskNameInput:focus {
+#task-name-input:focus {
   outline: none;
 }
 
-p#dateDue {
+#subtitle {
+  display: flex;
+}
+
+h2 {
   font-weight: 300;
   font-size: 16px;
 }
 
-select option {
-  background-color: #0f101a;
-}
-
-.overdue {
-  color: #fd7777;
-}
-
-.complete {
-  color: #4f5069;
-}
-
-.complete#taskName {
-  text-decoration: line-through;
-}
-
-#textDiv > * {
-  margin: 0 10px;
-}
-
-#buttonDiv {
+#buttons {
   display: flex;
+  align-items: center;
 }
 
 button {
@@ -190,66 +186,65 @@ button {
   border: none;
   display: flex;
   align-items: center;
+  cursor: pointer;
+  height: fit-content;
 }
 
 .material-symbols-outlined {
   font-size: 24px;
   font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
-  cursor: pointer;
 }
 
 #priority {
   margin: 0 10px;
+  height: 20px;
 }
 
-#priorityNumber {
-  margin: 0 5px;
+#priority-number {
+  font-size: 16px;
+  margin: 0 4px;
+  font-weight: 400;
 }
 
-#priorityInput {
+#priority-input {
   background-color: transparent;
   border: none;
   font-size: 16px;
-  margin: 0 1px;
 }
 
 #priority .material-symbols-outlined {
   font-size: 16px;
   font-variation-settings: 'FILL' , 'wght' 500, 'GRAD' 0, 'opsz' 16;
   cursor: default;
-  color: #e4e4e4;
   height: 20px;
   margin: 0;
   position: relative;
   top: 2px;
 }
 
-#priority.complete * {
-  color: #4f5069; 
+#priority.first-priority,
+#priority.first-priority * {
+  color: var(--first-p);
 }
 
-#priority.firstPriority,
-#priority.firstPriority * {
-  color: #fd7777;
+#priority.second-priority,
+#priority.second-priority * {
+  color: var(--second-p);
 }
 
-#priority.secondPriority,
-#priority.secondPriority * {
-  color: #fdb877;
+#wrapper.complete {
+  background: linear-gradient(45deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.05) 100%);
 }
 
-#backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
-  display: flex;
-  justify-content: center;
-  z-index: 2;
-  backdrop-filter: blur(5px);
-  padding: 100px;
-  box-sizing: border-box;
+.complete * {
+  color: #4f5069;
+}
+
+.complete #task-name {
+  text-decoration: line-through;
+}
+
+.overdue {
+  color: var(--red);
 }
 </style>

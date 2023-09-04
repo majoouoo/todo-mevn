@@ -1,10 +1,10 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import DatePicker from "../components/DatePicker.vue"
 
 let name = ref()
 let dateDue = ref(new Date())
-let priority = ref('')
+let priority = ref(3)
 
 import { store } from "../store.js"
 store.isLoggedIn = localStorage.getItem("user") ? true : false
@@ -28,107 +28,61 @@ const submitForm = () => {
     priority.value = ''
   }
 }
-
-const selectClass = computed(() => ({
-  nullValue: !priority.value
-}))
 </script>
 
 <template>
-  <div id="outerDiv">
+  <section id="wrapper">
     <form v-if="store.isLoggedIn">
       <h1>Add Task</h1>
-      <div id="inputDiv">
-        <input type="text" name="name" id="name" v-model="name" required placeholder="Name" />
+      <section id="inputs">
+        <input type="text" name="name" id="name" class="default-button" v-model="name" required placeholder="Name" />
         <select
           name="priority"
           id="priority"
+          class="default-button"
           v-model="priority"
           required
           placeholder="Priority"
-          :class="selectClass"
         >
-          <option value="" disabled hidden>Priority</option>
-          <option value="1" style="color: #fd7777">Priority 1</option>
-          <option value="2" style="color: #fdb877">Priority 2</option>
+          <option value="1" style="color: var(--first-p)">Priority 1</option>
+          <option value="2" style="color: var(--second-p)">Priority 2</option>
           <option value="3">Priority 3</option>
         </select>
-      </div>
-      <div id="datePicker">
-        <DatePicker :initialDate="new Date()" :isModal="false" @done="(day, month, year) => dateDue = new Date(year, month, day)"></DatePicker>
-      </div>
-      <div>
-        <input type="submit" value="Add" @click.prevent="submitForm" />
-      </div>
+      </section>
+      <DatePicker :initialDate="new Date()" :isModal="false" @done="(day, month, year) => dateDue = new Date(year, month, day)"></DatePicker>
+      <input type="submit" value="Add" class="default-button primary-button" @click.prevent="submitForm" />
     </form>
+
     <h1 v-else>Logged out</h1>
-  </div>
+  </section>
 </template>
 
 <style scoped>
-#outerDiv {
+#wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 20px 0;
 }
 
-h1 {
-  font-size: 24px;
-}
-
-* {
-  font-size: 18px;
-}
-
 form {
-  display: grid;
-  grid-template-rows: auto auto auto;
+  display: flex;
+  flex-direction: column;
   gap: 20px;
 }
 
-#inputDiv {
+#inputs {
   display: grid;
   grid-template-columns: auto 140px;
-  gap: 20px;
+  gap: 10px;
 }
 
-input,
-select {
-  background-color: transparent;
-  border: 1px solid #3a3b52;
-  outline: none;
-  padding: 12px;
-  border-radius: 50px;
-  transition: border-radius 0.2s;
+input[type=submit] {
+  width: 120px;
 }
 
-input:focus,
-input:hover,
-select:focus,
-select:hover {
-  border-radius: 5px;
-}
-
-input[type='submit'] {
-  margin: 0;
-  padding: 12px 20px;
-  height: initial;
-  width: initial;
-}
-
-::placeholder,
-.nullValue {
+::placeholder {
   color: #4f5069;
   opacity: 1;
-}
-
-select option {
-  background-color: #0f101a;
-}
-
-#datePicker {
-  border: 1px solid #3a3b52;
-  border-radius: 30px;
 }
 </style>

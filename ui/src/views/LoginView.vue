@@ -92,84 +92,67 @@ const deleteAccount = () => {
 </script>
 
 <template>
-  <div id="outerDiv">
-    <form v-if="!store.isLoggedIn">
+  <section v-if="!store.isLoggedIn">
+    <form>
       <h1>Login</h1>
-      <div>
-        <input type="text" name="username" id="username" v-model="username" required placeholder="Username" />
+      <div class="inputs">
+        <input type="text" name="username" class="default-button" v-model="username" required placeholder="Username" />
+        <input type="password" name="password" class="default-button" v-model="password" required placeholder="Password" />
       </div>
-      <div>
-        <input type="password" name="password" id="password" v-model="password" required placeholder="Password" />
+      <div class="buttons">
+        <input type="submit" value="Log in" class="default-button primary-button" @click.prevent="login" />
+        <input type="submit" value="Sign up" class="default-button" @click.prevent="signup" />
       </div>
-      <div>
-        <input type="submit" value="Log in" @click.prevent="login" />
-        <input type="submit" value="Sign up" @click.prevent="signup" />
-      </div>
-      <p id="error">{{ error }}</p>
+      <h2 id="error">{{ error }}</h2>
     </form>
-    <div v-else>
+  </section>
+  <section v-else>
+    <div class="flex-div">
       <h1>Logged in as {{ username }}</h1>
-      <br>
-      <button @click="logout">Log out</button>
-      <button @click="isDelModalVisible = true" id="deleteBtn">Delete account</button>
-      <DeleteModal v-if="isDelModalVisible" @cancel="isDelModalVisible = false" @delete="deleteAccount" object="account"></DeleteModal>
+      <div class="buttons">
+        <button @click="logout" class="default-button primary-button">Log out</button>
+        <button @click="isDelModalVisible = true" class="default-button danger-button">Delete account</button>
+      </div>
     </div>
+  </section>
+
+  <div class="backdrop" v-if="isDelModalVisible" @click.self="isDelModalVisible = false">
+    <DeleteModal v-if="isDelModalVisible" @cancel="isDelModalVisible = false" @delete="deleteAccount" object="account"></DeleteModal>
   </div>
 </template>
 
 <style scoped>
-#outerDiv {
+section {
   display: flex;
   justify-content: center;
-  align-items: center;
+  padding: 40px;
 }
 
-h1 {
-  font-size: 24px;
+form, .flex-div {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-div {
-  margin: 20px 0;
+.buttons, .inputs {
+  display: flex;
+  gap: 10px;
 }
 
-* {
-  font-size: 18px;
+.inputs {
+  flex-direction: column;
 }
 
-input, button {
-  background-color: transparent;
-  border: 1px solid #3a3b52;
-  outline: none;
-  padding: 12px;
-  width: 400px;
-  height: 23px;
-  border-radius: 50px;
-  transition: border-radius 0.2s;
-}
-
-input:focus, button:focus,
-input:hover, button:hover {
-  border-radius: 5px;
-}
-
-input[type='submit'], button {
-  margin: 0 10px 0 0;
-  padding: 12px 20px;
-  height: initial;
-  width: initial;
+form {
+  width: 100%;
+  max-width: 400px;
 }
 
 ::placeholder {
-  color: #4f5069;
-  opacity: 1;
+  color: var(--dark-green);
 }
 
 #error {
-  color: #fd7777;
-}
-
-#deleteBtn {
-  border: 1px solid #fd7777;
-  color: #fd7777;
+  color: var(--red);
 }
 </style>
