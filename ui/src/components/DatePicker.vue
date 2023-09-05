@@ -56,7 +56,7 @@ chooseDay(props.initialDate.getDate())
 </script>
 
 <template>
-  <div class="modal">
+  <div class="modal" :class="{ 'outer-border': !isModal }">
     <header>
       <h1>Set Date</h1>
       <button class="default-button primary-button" v-if="isModal" @click="$emit('done', chosenDay, month, year)">Done</button>
@@ -95,8 +95,12 @@ chooseDay(props.initialDate.getDate())
 </template>
 
 <style scoped>
+.outer-border {
+  border: 1px solid rgba(0, 0, 0, 0.3);
+}
+
 header {
-  background-color: var(--dark-green);
+  background-color: var(--bg-accent);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -104,7 +108,7 @@ header {
 }
 
 h1 {
-  color: var(--lime);
+  color: var(--accent);
   margin-left: 10px;
 }
 
@@ -121,7 +125,7 @@ h1 {
 }
 
 #week-days * {
-  color: var(--light-green);
+  color: var(--inactive);
   font-weight: 300;
 }
 
@@ -185,7 +189,7 @@ h1 {
 }
 
 .chosen-day {
-  background-color: var(--dark-green);
-  color: var(--lime);
+  background-color: var(--bg-accent);
+  color: var(--accent);
 }
 </style>

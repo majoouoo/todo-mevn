@@ -89,6 +89,46 @@ const deleteAccount = () => {
       isDelModalVisible.value = false
     })
 }
+
+let oldPassword = ref()
+let newPassword = ref()
+let pwChangeSuccess = ref(false)
+
+const changePassword = () => {
+  if (document.querySelector('form').reportValidity()) {
+    fetch('http://localhost:8080/auth/change-password', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem("user")).accessToken
+      },
+      body: JSON.stringify({
+        oldPassword: oldPassword.value,
+        newPassword: newPassword.value
+      })
+    })
+    .then(response => {
+        if(response.status === 200) {
+          response.json()
+            .then(data => {
+              localStorage.setItem("user", JSON.stringify({
+                username: username.value,
+                accessToken: data.accessToken
+              }))
+              error.value = ""
+              pwChangeSuccess.value = true
+              setTimeout(() => pwChangeSuccess.value = false, 2000)
+            })
+        } else {
+          response.json()
+            .then(data => {
+              error.value = data.err
+              pwChangeSuccess.value = false
+            })
+        }
+      })
+  }
+}
 </script>
 
 <template>
@@ -103,7 +143,7 @@ const deleteAccount = () => {
         <input type="submit" value="Log in" class="default-button primary-button" @click.prevent="login" />
         <input type="submit" value="Sign up" class="default-button" @click.prevent="signup" />
       </div>
-      <h2 id="error" v-if="error"><span class="material-symbols-outlined"> error </span> {{ error }}</h2>
+      <h2 id="error" class="message" v-if="error"><span class="material-symbols-outlined"> error </span> {{ error }}</h2>
     </form>
   </section>
   <section v-else>
@@ -113,6 +153,19 @@ const deleteAccount = () => {
         <button @click="logout" class="default-button primary-button">Log out</button>
         <button @click="isDelModalVisible = true" class="default-button danger-button">Delete account</button>
       </div>
+      <br>
+      <form>
+        <h1>Change password</h1>
+        <div class="inputs">
+          <input type="password" name="old-password" class="default-button" v-model="oldPassword" required placeholder="Old password" />
+          <input type="password" name="new-password" class="default-button" v-model="newPassword" required placeholder="New password" />
+        </div>
+        <div class="buttons">
+          <input type="submit" value="Change" class="default-button primary-button" @click.prevent="changePassword" />
+        </div>
+      </form>
+      <h2 id="error" class="message" v-if="error"><span class="material-symbols-outlined"> error </span> {{ error }}</h2>
+      <h2 class="message" :class="{ 'msg-hidden': error || !pwChangeSuccess }"><span class="material-symbols-outlined"> check_circle </span>Password changed</h2>
     </div>
   </section>
 
@@ -149,17 +202,22 @@ form {
 }
 
 ::placeholder {
-  color: var(--dark-green);
+  color: var(--bg-accent);
 }
 
-#error {
-  color: var(--red);
+.message {
   display: flex;
   align-items: center;
   gap: 5px;
+  opacity: 1;
+  transition: opacity 0.3s ease;
 }
 
-#error * {
+.msg-hidden {
+  opacity: 0;
+}
+
+#error, #error * {
   color: var(--red);
 }
 

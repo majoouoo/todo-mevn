@@ -37,7 +37,7 @@ header {
   height: 6vh;
   padding: 0 0 0 20px;
   align-items: center;
-  background-color: var(--dark-green);
+  background-color: var(--bg-accent);
   position: sticky;
   top: 0;
   box-shadow: 0 4px 20px rgba(56, 102, 65, 0.5);
@@ -63,7 +63,7 @@ nav a {
 
 nav a * {
   margin: 0 5px;
-  color: var(--light-green);
+  color: var(--inactive);
   font-weight: 500;
 }
 
@@ -84,12 +84,12 @@ nav a:hover * {
 }
 
 .router-link-active * {
-  color: var(--lime);
+  color: var(--accent);
 }
 
 .router-link-active::after {
   content: "";
-  background-color: var(--lime);
+  background-color: var(--accent);
   filter: blur(25px);
   position: absolute;
   bottom: 0;
@@ -99,7 +99,7 @@ nav a:hover * {
 }
 
 /* #wrapper {
-  background-color: var(--dark-green);
+  background-color: var(--bg-accent);
   padding: 0 20px 20px 20px;
   box-sizing: border-box;
   z-index: 2;
@@ -111,7 +111,7 @@ nav a:hover * {
 }
 
 #view {
-  background-color: var(--tan);
+  background-color: var(--bg);
   border-radius: 15px;
   min-height: calc(94vh - 40px);
 } */

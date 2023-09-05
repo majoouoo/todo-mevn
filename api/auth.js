@@ -98,4 +98,32 @@ router.delete("/delete-account", authenticate, (req, res) => {
     })
 })
 
+router.patch("/change-password", authenticate, (req, res) => {
+  users.findOne({ username: req.user.username })
+    .then((user) => {
+      bcrypt.compare(req.body.oldPassword, user.password)
+        .then((pwCorrect) => {
+          if (pwCorrect) {
+            bcrypt.hash(req.body.newPassword, 10)
+              .then((hash) => {
+                users.updateOne(
+                  { username: req.user.username },
+                  { $set: { "password": hash } }
+                )
+                  .then(() => {
+                    const accessToken = jwt.sign({
+                      username: req.user.username,
+                      password: hash
+                    }, process.env.ACCESS_TOKEN_SECRET)
+                    res.status(200).json({ accessToken: accessToken })
+                  })
+                  .catch((err) => res.status(500).json({ err: "Failed to write to DB", errCode: err }))
+              })
+          } else {
+            res.status(403).json({ err: "Wrong password" })
+          }
+        })
+    })
+})
+
 module.exports = router
