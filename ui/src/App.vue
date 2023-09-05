@@ -37,7 +37,7 @@ header {
   height: 6vh;
   padding: 0 0 0 20px;
   align-items: center;
-  background-color: var(--bg-accent);
+  background-color: var(--primary);
   position: sticky;
   top: 0;
   box-shadow: 0 4px 20px rgba(56, 102, 65, 0.5);
@@ -63,7 +63,7 @@ nav a {
 
 nav a * {
   margin: 0 5px;
-  color: var(--inactive);
+  color: var(--secondary);
   font-weight: 500;
 }
 
@@ -99,7 +99,7 @@ nav a:hover * {
 }
 
 /* #wrapper {
-  background-color: var(--bg-accent);
+  background-color: var(--primary);
   padding: 0 20px 20px 20px;
   box-sizing: border-box;
   z-index: 2;

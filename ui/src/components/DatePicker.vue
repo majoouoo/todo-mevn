@@ -100,7 +100,7 @@ chooseDay(props.initialDate.getDate())
 }
 
 header {
-  background-color: var(--bg-accent);
+  background-color: var(--primary);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -125,7 +125,7 @@ h1 {
 }
 
 #week-days * {
-  color: var(--inactive);
+  color: var(--secondary);
   font-weight: 300;
 }
 
@@ -189,7 +189,7 @@ h1 {
 }
 
 .chosen-day {
-  background-color: var(--bg-accent);
+  background-color: var(--primary);
   color: var(--accent);
 }
 </style>

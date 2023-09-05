@@ -95,6 +95,7 @@ const sortTasks = () => {
       @sortTasks="sortTasks"
     ></TaskBody>
   </section>
+
   <h1 id="tasklist-completed-title" v-if="tasklistCompleted.length > 0">Completed Tasks</h1>
   <section id="tasklist-completed" v-if="store.isLoggedIn">
     <TaskBody
@@ -107,9 +108,10 @@ const sortTasks = () => {
     ></TaskBody>
   </section>
 
-  <h1 v-if="noTasks">No tasks</h1>
-  <h1 v-if="!store.isLoggedIn">Logged out</h1>
-
+  <section id="messages">
+    <h1 v-if="noTasks">No tasks</h1>
+    <h1 v-if="!store.isLoggedIn">Logged out</h1>
+  </section>
 </template>
 
 <style scoped>
@@ -121,5 +123,15 @@ const sortTasks = () => {
   font-size: 20px;
   color: #595a75;
   margin: 20px;
+}
+
+#messages {
+  padding: 40px 0;
+  display: flex;
+  justify-content: center;
+}
+
+#messages * {
+  color: #0000009c;
 }
 </style>

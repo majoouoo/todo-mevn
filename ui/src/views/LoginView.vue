@@ -116,6 +116,8 @@ const changePassword = () => {
                 accessToken: data.accessToken
               }))
               error.value = ""
+              oldPassword.value = ""
+              newPassword.value = ""
               pwChangeSuccess.value = true
               setTimeout(() => pwChangeSuccess.value = false, 2000)
             })
@@ -202,7 +204,7 @@ form {
 }
 
 ::placeholder {
-  color: var(--bg-accent);
+  color: var(--primary);
 }
 
 .message {

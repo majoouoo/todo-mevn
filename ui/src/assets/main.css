@@ -3,9 +3,10 @@
 :root {
   --white: #eeeeee;
   --bg: #f1ede1;
-  --bg-accent: #092B17;
-  --inactive: #6A994E;
+  --primary: #092B17;
+  --secondary: #6A994E;
   --accent: #BAF72A;
+
   --red: #cf0003;
   --black: #1b1b1b;
 
@@ -56,7 +57,7 @@ button, input {
 
   background-color: transparent;
   border: 1px solid rgba(0, 0, 0, 0.3);
-  color: var(--bg-accent);
+  color: var(--primary);
 }
 
 .default-button:hover {
@@ -68,7 +69,7 @@ button, input {
 }
 
 .primary-button {
-  background-color: var(--bg-accent);
+  background-color: var(--primary);
   border: 1px solid var(--accent);
   color: var(--accent);
 }

@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import DatePicker from "../components/DatePicker.vue"
 
 let name = ref()
@@ -28,6 +28,11 @@ const submitForm = () => {
     priority.value = ''
   }
 }
+
+const priorityClass = computed(() => ({
+  'first-priority': priority.value == 1,
+  'second-priority': priority.value == 2
+}))
 </script>
 
 <template>
@@ -40,20 +45,21 @@ const submitForm = () => {
           name="priority"
           id="priority"
           class="default-button"
+          :class="priorityClass"
           v-model="priority"
           required
           placeholder="Priority"
         >
           <option value="1" style="color: var(--first-p)">Priority 1</option>
           <option value="2" style="color: var(--second-p)">Priority 2</option>
-          <option value="3">Priority 3</option>
+          <option value="3" style="color: var(--black)">Priority 3</option>
         </select>
       </section>
       <DatePicker :initialDate="new Date()" :isModal="false" @done="(day, month, year) => dateDue = new Date(year, month, day)"></DatePicker>
       <input type="submit" value="Add" class="default-button primary-button" @click.prevent="submitForm" />
     </form>
 
-    <h1 v-else>Logged out</h1>
+    <h1 v-else style="color: #0000009c;">Logged out</h1>
   </section>
 </template>
 
@@ -62,7 +68,7 @@ const submitForm = () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 20px 0;
+  padding: 40px 0;
 }
 
 form {
@@ -84,5 +90,17 @@ input[type=submit] {
 ::placeholder {
   color: #4f5069;
   opacity: 1;
+}
+
+#priority.first-priority,
+#priority.first-priority * {
+  border: 1px solid var(--first-p);
+  color: var(--first-p);
+}
+
+#priority.second-priority,
+#priority.second-priority * {
+  border: 1px solid var(--second-p);
+  color: var(--second-p);
 }
 </style>
