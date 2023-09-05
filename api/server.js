@@ -67,7 +67,7 @@ app.get("/api/tasklist", authenticate, (req, res) => {
     .catch((err) => res.status(500).json({err: "Could not fetch all tasks", errCode: err}))
 })
 
-app.patch("/api/completetask", authenticate, (req, res) => {
+app.patch("/api/complete-task", authenticate, (req, res) => {
   const taskId = req.query.id
   if(ObjectId.isValid(taskId)) {
     let isComplete
@@ -89,7 +89,7 @@ app.patch("/api/completetask", authenticate, (req, res) => {
   }
 })
 
-app.post("/api/addtask", authenticate, (req, res) => {
+app.post("/api/add-task", authenticate, (req, res) => {
   const body = req.body
   tasks.insertOne({
     name: body.name,
@@ -102,7 +102,7 @@ app.post("/api/addtask", authenticate, (req, res) => {
     .catch((err) => res.status(500).json({err: "Failed to add task", errCode: err}))
 })
 
-app.delete("/api/deletetask", authenticate, (req, res) => {
+app.delete("/api/delete-task", authenticate, (req, res) => {
   const taskId = req.query.id
   if(ObjectId.isValid(taskId)) {
     tasks.deleteOne({
@@ -116,7 +116,7 @@ app.delete("/api/deletetask", authenticate, (req, res) => {
   }
 })
 
-app.patch("/api/edittask", authenticate, (req, res) => {
+app.patch("/api/edit-task", authenticate, (req, res) => {
   const taskId = req.query.id
   const body = req.body
   if (ObjectId.isValid(taskId)) {
@@ -131,7 +131,7 @@ app.patch("/api/edittask", authenticate, (req, res) => {
   }
 })
 
-app.patch("/api/rescheduletask", authenticate, (req, res) => {
+app.patch("/api/reschedule-task", authenticate, (req, res) => {
   const taskId = req.query.id
   const body = req.body
   if (ObjectId.isValid(taskId)) {

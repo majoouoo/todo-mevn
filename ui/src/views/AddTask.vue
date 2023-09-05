@@ -11,7 +11,7 @@ store.isLoggedIn = localStorage.getItem("user") ? true : false
 
 const submitForm = () => {
   if (document.querySelector('form').reportValidity()) {
-    fetch('http://localhost:8080/api/addtask', {
+    fetch('http://localhost:8080/api/add-task', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

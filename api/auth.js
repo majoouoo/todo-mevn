@@ -42,7 +42,7 @@ const authenticate = (req, res, next) => {
   })
 }
 
-router.post("/signup", (req, res) => {
+router.post("/sign-up", (req, res) => {
   users.findOne({ username: req.body.username })
     .then((result) => {
       if (!result) {
@@ -68,7 +68,7 @@ router.post("/signup", (req, res) => {
     })
 })
 
-router.post("/login", (req, res) => {
+router.post("/log-in", (req, res) => {
   users.findOne({ username: req.body.username })
     .then((user) => {
       if(user) {
@@ -90,7 +90,7 @@ router.post("/login", (req, res) => {
     })
 })
 
-router.delete("/deleteaccount", authenticate, (req, res) => {
+router.delete("/delete-account", authenticate, (req, res) => {
   users.deleteOne({ username: req.user.username })
     .then(() => {
       tasks.deleteMany({ user: req.user.username })

@@ -11,7 +11,7 @@ let error = ref("")
 
 const login = () => {
   if (document.querySelector('form').reportValidity()) {
-    fetch('http://localhost:8080/auth/login', {
+    fetch('http://localhost:8080/auth/log-in', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -42,7 +42,7 @@ const login = () => {
 
 const signup = () => {
   if (document.querySelector('form').reportValidity()) {
-    fetch('http://localhost:8080/auth/signup', {
+    fetch('http://localhost:8080/auth/sign-up', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -78,7 +78,7 @@ const logout = () => {
 
 let isDelModalVisible = ref(false)
 const deleteAccount = () => {
-  fetch('http://localhost:8080/auth/deleteaccount', {
+  fetch('http://localhost:8080/auth/delete-account', {
     method: 'DELETE',
     headers: {
       'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem("user")).accessToken
@@ -103,7 +103,7 @@ const deleteAccount = () => {
         <input type="submit" value="Log in" class="default-button primary-button" @click.prevent="login" />
         <input type="submit" value="Sign up" class="default-button" @click.prevent="signup" />
       </div>
-      <h2 id="error">{{ error }}</h2>
+      <h2 id="error" v-if="error"><span class="material-symbols-outlined"> error </span> {{ error }}</h2>
     </form>
   </section>
   <section v-else>
@@ -154,5 +154,17 @@ form {
 
 #error {
   color: var(--red);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+#error * {
+  color: var(--red);
+}
+
+.material-symbols-outlined {
+  font-size: 24px;
+  font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
 }
 </style>

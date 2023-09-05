@@ -42,6 +42,7 @@ header {
   top: 0;
   box-shadow: 0 4px 20px rgba(56, 102, 65, 0.5);
   z-index: 3;
+  overflow: hidden;
 }
 
 header * {
@@ -66,6 +67,10 @@ nav a * {
   font-weight: 500;
 }
 
+nav a:hover * {
+  color: var(--white);
+}
+
 .material-symbols-outlined {
   font-size: 1.5em;
 }
@@ -80,6 +85,17 @@ nav a * {
 
 .router-link-active * {
   color: var(--lime);
+}
+
+.router-link-active::after {
+  content: "";
+  background-color: var(--lime);
+  filter: blur(25px);
+  position: absolute;
+  bottom: 0;
+  z-index: -1;
+  width: 110px;
+  height: 20%;
 }
 
 /* #wrapper {

@@ -23,7 +23,7 @@ const priorityClass = computed(() => ({
 let editMode = ref(false)
 const editTask = () => {
   if (editMode.value && document.querySelector('#task-name-input').reportValidity()) {
-    fetch(`http://localhost:8080/api/edittask?id=${taskMutable.value._id}`, {
+    fetch(`http://localhost:8080/api/edit-task?id=${taskMutable.value._id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -41,7 +41,7 @@ const editTask = () => {
 let rescheduleMode = ref(false)
 const rescheduleTask = (day, month, year) => {
   if(rescheduleMode.value && day != -1) {
-    fetch(`http://localhost:8080/api/rescheduletask?id=${taskMutable.value._id}`, {
+    fetch(`http://localhost:8080/api/reschedule-task?id=${taskMutable.value._id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -195,6 +195,10 @@ button {
   font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
 }
 
+.material-symbols-outlined:hover {
+  color: #4f5069;
+}
+
 #priority {
   margin: 0 10px;
   height: 20px;
@@ -232,6 +236,15 @@ button {
   color: var(--second-p);
 }
 
+.overdue {
+  color: var(--red);
+  text-shadow: 0 0 10px #cf00039f;
+}
+
+.complete .overdue {
+  text-shadow: none;
+}
+
 #wrapper.complete {
   background: linear-gradient(45deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.05) 100%);
 }
@@ -242,9 +255,5 @@ button {
 
 .complete #task-name {
   text-decoration: line-through;
-}
-
-.overdue {
-  color: var(--red);
 }
 </style>

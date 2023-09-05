@@ -44,7 +44,7 @@ const removeTaskFromList = (task) => {
 }
 
 const completeTask = (task) => {
-  fetch(`http://localhost:8080/api/completetask?id=${task._id}`, {
+  fetch(`http://localhost:8080/api/complete-task?id=${task._id}`, {
     method: 'PATCH',
     headers: {
       "Authorization": "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken
@@ -60,7 +60,7 @@ const completeTask = (task) => {
 }
 
 const deleteTask = (task) => {
-  fetch(`http://localhost:8080/api/deletetask?id=${task._id}`, {
+  fetch(`http://localhost:8080/api/delete-task?id=${task._id}`, {
     method: 'DELETE',
     headers: {
       "Authorization": "Bearer " + JSON.parse(localStorage.getItem("user")).accessToken
