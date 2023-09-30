@@ -55,7 +55,7 @@ const priorityClass = computed(() => ({
           <option value="3" style="color: var(--black)">Priority 3</option>
         </select>
       </section>
-      <DatePicker :initialDate="new Date()" :isModal="false" @done="(day, month, year) => dateDue = new Date(year, month, day)"></DatePicker>
+      <DatePicker id="date-picker" :initialDate="new Date()" :isModal="false" @done="(day, month, year) => dateDue = new Date(year, month, day)"></DatePicker>
       <input type="submit" value="Add" class="default-button primary-button" @click.prevent="submitForm" />
     </form>
 
@@ -68,18 +68,23 @@ const priorityClass = computed(() => ({
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 40px 0;
+  padding: 40px 20px;
 }
 
 form {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  max-width: 100%;
+}
+
+form > * {
+  max-width: 100%;
 }
 
 #inputs {
   display: grid;
-  grid-template-columns: auto 140px;
+  grid-template-columns: calc(100% - 150px) 140px;
   gap: 10px;
 }
 

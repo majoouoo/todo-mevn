@@ -34,14 +34,14 @@ store.isLoggedIn = localStorage.getItem("user") ? true : false
 header {
   display: flex;
   justify-content: space-between;
-  height: 6vh;
+  height: max(40px, 6vh);
   padding: 0 0 0 20px;
   align-items: center;
   background-color: var(--primary);
   position: sticky;
   top: 0;
   box-shadow: 0 4px 20px rgba(56, 102, 65, 0.5);
-  z-index: 3;
+  z-index: 2;
   overflow: hidden;
 }
 
@@ -98,21 +98,17 @@ nav a:hover * {
   height: 20%;
 }
 
-/* #wrapper {
-  background-color: var(--primary);
-  padding: 0 20px 20px 20px;
-  box-sizing: border-box;
-  z-index: 2;
-  height: 94vh;
-  width: 100%;
-  position: sticky;
-  top: 6vh;
-  left: 0;
-}
+@media screen and (max-width: 800px) {
+  nav a h2 {
+    display: none;
+  }
 
-#view {
-  background-color: var(--bg);
-  border-radius: 15px;
-  min-height: calc(94vh - 40px);
-} */
+  nav a {
+    padding: 5px;
+  }
+
+  .router-link-active::after {
+    width: 40px;
+  }
+}
 </style>

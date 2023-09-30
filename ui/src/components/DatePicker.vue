@@ -97,6 +97,7 @@ chooseDay(props.initialDate.getDate())
 <style scoped>
 .outer-border {
   border: 1px solid rgba(0, 0, 0, 0.3);
+  z-index: 1;
 }
 
 header {
@@ -191,5 +192,13 @@ h1 {
 .chosen-day {
   background-color: var(--primary);
   color: var(--accent);
+}
+
+@media screen and (max-height: 600px) {
+  .modal {
+    transform: scale(0.7);
+    top: -15vh;
+    position: absolute;
+  }
 }
 </style>

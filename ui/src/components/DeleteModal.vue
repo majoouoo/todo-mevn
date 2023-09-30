@@ -37,4 +37,10 @@ p {
   color: #3a3b52;
   font-style: italic;
 }
+
+@media screen and (max-width: 1000px) {
+  p {
+    display: none;
+  }
+}
 </style>

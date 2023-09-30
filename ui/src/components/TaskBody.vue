@@ -147,12 +147,13 @@ let isDelModalVisible = ref(false)
 
 #text {
   margin: 0 10px;
+  max-width: 50vw;
 }
 
 h1, #task-name-input {
   font-weight: 600;
-  font-size: 20px;
-  line-height: 24px;
+  font-size: max(16px, 2.2vh);
+  line-height: max(20px, 3vh);
   overflow-wrap: anywhere;
 }
 
@@ -161,6 +162,7 @@ h1, #task-name-input {
   border: none;
   padding: 0;
   background: linear-gradient(#4f50696e, #4f50696e) 0 90% / 100% 6px no-repeat;
+  max-width: 50vw;
 }
 
 #task-name-input:focus {
@@ -173,7 +175,9 @@ h1, #task-name-input {
 
 h2 {
   font-weight: 300;
-  font-size: 16px;
+  font-size: max(13px, 1.6vh);
+  display: flex;
+  align-items: center;
 }
 
 #buttons {
@@ -255,5 +259,16 @@ button {
 
 .complete #task-name {
   text-decoration: line-through;
+}
+
+@media screen and (max-width: 800px) {
+  #wrapper {
+    margin: 10px;
+    padding: 2vh 10px;
+  }
+
+  button {
+    padding: 1px 2px;
+  }
 }
 </style>

@@ -32,7 +32,7 @@ a {
 h1 {
   margin: 0;
   font-weight: 700;
-  font-size: 24px;
+  font-size: max(20px, 2.6vh);
 }
 
 h2 {
@@ -91,7 +91,7 @@ button, input {
   justify-content: center;
   z-index: 2;
   backdrop-filter: blur(5px);
-  padding: 100px;
+  padding: 10vh 10vw;
   box-sizing: border-box;
 }
 
@@ -103,4 +103,10 @@ button, input {
   z-index: 3;
   overflow: hidden;
   box-shadow: 0 10px 20px #00000030;
+}
+
+@media screen and (max-width: 800px) {
+  .default-button {
+    padding: 6px 20px;
+  }
 }
