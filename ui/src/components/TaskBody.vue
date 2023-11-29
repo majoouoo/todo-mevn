@@ -192,15 +192,20 @@ button {
   align-items: center;
   cursor: pointer;
   height: fit-content;
+  padding: 6px;
+  border-radius: 50%;
+}
+
+button:hover {
+  padding: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 10px #00000015;
+  cursor: pointer;
 }
 
 .material-symbols-outlined {
   font-size: 24px;
   font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
-}
-
-.material-symbols-outlined:hover {
-  color: #4f5069;
 }
 
 #priority {

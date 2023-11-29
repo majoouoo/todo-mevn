@@ -34,7 +34,7 @@ store.isLoggedIn = localStorage.getItem("user") ? true : false
 header {
   display: flex;
   justify-content: space-between;
-  height: max(40px, 6vh);
+  height: max(50px, 6vh);
   padding: 0 0 0 20px;
   align-items: center;
   background-color: var(--primary);

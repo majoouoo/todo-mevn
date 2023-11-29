@@ -195,9 +195,9 @@ h1 {
 }
 
 @media screen and (max-height: 600px) {
-  .modal {
+  .modal:not(.outer-border) {
     transform: scale(0.7);
-    top: -15vh;
+    top: -10vh;
     position: absolute;
   }
 }
